@@ -1,16 +1,14 @@
 import Header from './Header'
-import Siderbar from './Siderbar'
-import './DefaultLayout.scss'
-function DefaultLayout({ children }) {
+import './LoginLayout.scss'
+function LoginLayout({ children }) {
     return (
         <div>
             <Header />
             <div className="container-xxl d-flex">
-                <Siderbar />
                 <div className="content">{children}</div>
             </div>
         </div>
     )
 }
 
-export default DefaultLayout
+export default LoginLayout

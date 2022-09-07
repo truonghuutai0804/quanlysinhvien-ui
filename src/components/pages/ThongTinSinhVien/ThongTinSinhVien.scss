@@ -1,0 +1,27 @@
+.infor-edit,
+.infor-remove,
+.infor-see {
+    margin: 0px 10px;
+    cursor: pointer;
+}
+
+.infor-new{
+    color: var(--primary) !important;
+}
+
+.infor-see {
+    color: var(--info) !important;
+}
+
+.infor-edit{
+    color: var(--blue) !important;
+}
+
+.infor-remove{
+    color: var(--danger) !important;
+}
+
+.hinhanh_sinhvien{
+    width: 130px;
+    height: 130px;
+}

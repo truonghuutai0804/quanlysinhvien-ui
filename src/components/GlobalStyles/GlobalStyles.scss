@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap');
 
 :root {
-    --blue: #007bff;
+    --blue: #0926e1d8;
     --indigo: #6610f2;
     --purple: #6f42c1;
     --pink: #e83e8c;
@@ -37,7 +37,7 @@
 }
 
 html {
-    font-size: 62.5%;
+    font-size: 82.5%;
 }
 
 body {
@@ -56,4 +56,10 @@ button, input, [tabindex] {
 a[href] {
     color: var(--dark);
     text-decoration: none;
+    cursor: pointer;
 }
+
+th, .table-text-center{
+    text-align: center !important;
+}
+

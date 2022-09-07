@@ -1,7 +1,7 @@
 import React from 'react'
 
 function Header() {
-    return <div>Header</div>
+    return <h2>Admin Quản lý sinh viên</h2>
 }
 
 export default Header
