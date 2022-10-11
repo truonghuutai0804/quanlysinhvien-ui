@@ -1,32 +1,30 @@
-import BangDieuKhien from '~/components/pages/BangDieuKhien'
-import ThongTinSinhVien from '~/components/pages/ThongTinSinhVien'
-import DiemSinhVien from '~/components/pages/DiemSinhVien'
-import PhongDaoTao from '~/components/pages/PhongDaoTao'
-import GiaoVien from '~/components/pages/GiaoVien'
-import MonHoc from '~/components/pages/MonHoc'
-import LopHoc from '~/components/pages/LopHoc'
-import TaiKhoan from '~/components/pages/TaiKhoan'
-import DangNhap from '~/components/pages/DangNhap'
-import ChuyenNganh from '~/components/pages/ChuyenNganh'
-import Khoa from '~/components/pages/Khoa'
-import {LoginLayout} from '~/components/Layouts'
+import BangDieuKhien from '~/pages/BangDieuKhien'
+import ThongTinSinhVien from '~/pages/ThongTinSinhVien'
+import DiemSinhVien from '~/pages/DiemSinhVien'
+import PhongDaoTao from '~/pages/PhongDaoTao'
+import GiaoVien from '~/pages/GiaoVien'
+import MonHoc from '~/pages/MonHoc'
+import LopHoc from '~/pages/LopHoc'
+import TaiKhoan from '~/pages/TaiKhoan'
+import DangNhap from '~/pages/DangNhap'
+import ChuyenNganh from '~/pages/ChuyenNganh'
+import Khoa from '~/pages/Khoa'
+import { LoginLayout } from '~/layouts'
 
-// Truy cập trang không cần đăng nhập
-const publicRoutes = [
-    { path: '/', component: BangDieuKhien },
-    { path: '/ThongTinSinhVien', component: ThongTinSinhVien },
-    { path: '/DiemSinhVien', component: DiemSinhVien },
-    { path: '/PhongDaoTao', component: PhongDaoTao },
-    { path: '/GiaoVien', component: GiaoVien },
-    { path: '/MonHoc', component: MonHoc },
-    { path: '/LopHoc', component: LopHoc },
-    { path: '/ChuyenNganh', component: ChuyenNganh },
-    { path: '/Khoa', component: Khoa },
-    { path: '/TaiKhoan', component: TaiKhoan },
+// Truy cập trang sau khi đăng nhập
+const privateRoutes = [
+    { path: '/Admin/', component: BangDieuKhien },
+    { path: '/Admin/ThongTinSinhVien', component: ThongTinSinhVien },
+    { path: '/Admin/DiemSinhVien', component: DiemSinhVien },
+    { path: '/Admin/PhongDaoTao', component: PhongDaoTao },
+    { path: '/Admin/GiaoVien', component: GiaoVien },
+    { path: '/Admin/MonHoc', component: MonHoc },
+    { path: '/Admin/LopHoc', component: LopHoc },
+    { path: '/Admin/ChuyenNganh', component: ChuyenNganh },
+    { path: '/Admin/Khoa', component: Khoa },
+    { path: '/Admin/TaiKhoan', component: TaiKhoan },
     { path: '/DangNhap', component: DangNhap, layout: LoginLayout },
 ]
 
-// Truy cập trang sau khi đăng nhập
-const privateRoutes = [ ]
 
-export { publicRoutes, privateRoutes }
+export { privateRoutes }

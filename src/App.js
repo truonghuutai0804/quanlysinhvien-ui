@@ -1,23 +1,35 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { publicRoutes } from './routes'
-import { DefaultLayout } from './components/Layouts'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { privateRoutes } from './routes'
+import { DefaultLayout } from './layouts'
 
 function App() {
+    const login = localStorage.getItem('login')
+    const pathDangNhap = '/DangNhap'
+    const checkLogin = () => {
+        if (login !== null || window.location.pathname === pathDangNhap) return true
+        return false
+    }
+
     return (
         <Router>
             <div className="App">
                 <Routes>
-                    {publicRoutes.map((route, idx) => {
-                        const Layout = route.layout || DefaultLayout
-                        const Page = route.component
+                    {privateRoutes.map((route, idx) => {
+                        var Layout = route.layout || DefaultLayout
+                        var Page = route.component
                         return (
                             <Route
                                 key={idx}
                                 path={route.path}
                                 element={
-                                    <Layout>
-                                        <Page />
-                                    </Layout>
+                                    checkLogin() ? (
+                                        <Layout>
+                                            <Page />
+                                        </Layout>
+                                    ) : (
+                                        window.location.pathname = pathDangNhap,
+                                        <Navigate replace to="/DangNhap" />
+                                    )
                                 }
                             />
                         )

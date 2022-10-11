@@ -48,7 +48,9 @@ body {
     color: var(--dark);
 }
 
-button, input, [tabindex] {
+button,
+input,
+[tabindex] {
     border: none;
     outline: none;
 }
@@ -59,7 +61,42 @@ a[href] {
     cursor: pointer;
 }
 
-th, .table-text-center{
+th,
+.table-text-center {
     text-align: center !important;
 }
 
+.infor-edit,
+.infor-remove,
+.infor-see,
+.infor-printer,
+.infor-close,
+.infor-save {
+    margin: 0px 10px;
+    cursor: pointer;
+}
+
+.infor-see {
+    color: var(--info) !important;
+}
+
+.infor-edit {
+    color: var(--blue) !important;
+}
+
+.infor-printer, .infor-new {
+    color: var(--primary) !important;
+}
+
+.infor-save {
+    color: var(--success) !important;
+}
+
+.infor-close, .infor-remove {
+    color: var(--danger) !important;
+}
+
+.hinhanh_sinhvien {
+    width: 130px;
+    height: 130px;
+}
