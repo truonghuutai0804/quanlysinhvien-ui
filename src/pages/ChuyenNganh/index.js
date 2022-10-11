@@ -145,6 +145,12 @@ const ChuyenNganh = () => {
                 <Modal.Body>
                     <Form>
                         <Form.Group className="mb-3">
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Tên chuyên ngành</strong>
+                                </Form.Label>
+                                <Form.Control type="text" value={editMajor.MA_CN} disabled />
+                            </Form.Group>
                             <Form.Label>
                                 <strong>Khoa</strong>
                             </Form.Label>
@@ -180,7 +186,9 @@ const ChuyenNganh = () => {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <p>Bạn có chắc chắn xóa thông tin của chuyên nghành <strong>{deleteMajor.TEN_CN}</strong> ?</p>
+                    <p>
+                        Bạn có chắc chắn xóa thông tin của chuyên nghành <strong>{deleteMajor.TEN_CN}</strong> ?
+                    </p>
                     <strong>Lưu ý:</strong> Nếu xóa thông tin chuyên nghành này sẽ mất vĩnh viễn
                 </Modal.Body>
                 <Modal.Footer>

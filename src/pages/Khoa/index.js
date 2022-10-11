@@ -7,6 +7,7 @@ import { MdAddBox } from 'react-icons/md'
 const Khoa = () => {
     const [infoFaculty, setInfoFaculty] = useState([])
     const [editInfoFaculty, setEditInfoFaculty] = useState([])
+    const [deleteInfoFaculty, setDeleteInfoFaculty] = useState([])
     const [seeEditInfoFaculty, setSeeEditInfoFaculty] = useState([])
 
     const [showThemMoi, setShowThemMoi] = useState(false)
@@ -18,7 +19,10 @@ const Khoa = () => {
         setShowSuaLai(true)
         setSeeEditInfoFaculty(info)
     }
-    const handleShowXoa = () => setShowXoa(true)
+    const handleShowXoa = (info) => {
+        setShowXoa(true)
+        setDeleteInfoFaculty(info)
+    }
 
     const handleCloseThemMoi = () => setShowThemMoi(false)
     const handleCloseSuaLai = () => setShowSuaLai(false)
@@ -73,7 +77,7 @@ const Khoa = () => {
                                         <strong className="infor-edit" onClick={() => handleShowSuaLai(item)}>
                                             <FaEdit />
                                         </strong>
-                                        <strong className="infor-remove" onClick={handleShowXoa}>
+                                        <strong className="infor-remove" onClick={()=>handleShowXoa(item)}>
                                             <FaTrashAlt />
                                         </strong>
                                     </td>
@@ -155,8 +159,8 @@ const Khoa = () => {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4>Bạn có chắc chắn xóa thông tin của chuyên nghành này ?</h4>
-                    <strong>Lưu ý:</strong> Nếu xóa thông tin chuyên nghành này sẽ mất vĩnh viễn
+                    <p>Bạn có chắc chắn xóa thông tin của khoa <strong>{deleteInfoFaculty.TEN_KHOA}</strong> này ?</p>
+                    <strong>Lưu ý:</strong> Nếu xóa thông tin khoa này sẽ mất vĩnh viễn
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="danger" onClick={handleCloseXoa}>
