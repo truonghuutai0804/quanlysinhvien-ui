@@ -71,6 +71,21 @@ function ThongTinSinhVien() {
         }
     }, [])
 
+    // const setSinhVien = async() =>{
+    //     try {
+    //         const options = {
+    //             method: 'post',
+    //             url: 'http://localhost:8080/api/student',
+    //         }
+    //         const response = await axios(options)
+    //         if (response.data.message === 'SUCCESS') {
+    //             alert("Thêm sinh viên thành công")
+    //         }
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
+
     useEffect(() => {
         getSinhVien()
     }, [getSinhVien])

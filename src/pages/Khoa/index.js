@@ -3,10 +3,13 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Form, Modal, Table } from 'react-bootstrap'
 import { FaEdit, FaTrashAlt } from 'react-icons/fa'
 import { MdAddBox } from 'react-icons/md'
+import Swal from 'sweetalert2'
+
 
 const Khoa = () => {
     const [infoFaculty, setInfoFaculty] = useState([])
     const [editInfoFaculty, setEditInfoFaculty] = useState([])
+    const [createInfoFaculty, setCreateInfoFaculty] = useState([])
     const [deleteInfoFaculty, setDeleteInfoFaculty] = useState([])
     const [seeEditInfoFaculty, setSeeEditInfoFaculty] = useState([])
 
@@ -43,6 +46,60 @@ const Khoa = () => {
             console.log(error)
         }
     }, [])
+
+    const setKhoa = async () => {
+        try {
+            const options = {
+                method: 'post',
+                url: 'http://localhost:8080/api/faculty',
+                data: createInfoFaculty
+            }
+            const response = await axios(options)
+            if (response.data.message === 'SUCCESS') {
+                handleCloseThemMoi()
+                Swal.fire('Thành công', 'Bạn đã thêm mới thành công ', 'success')
+                getKhoa()
+            }
+        } catch (error) {
+            Swal.fire('Thất bại', error, 'error')
+        }
+    }
+
+    const editKhoa = async (id) => {
+        try {
+            const options = {
+                method: 'put',
+                url: `http://localhost:8080/api/faculty/${id}`,
+                data: editInfoFaculty
+            }
+            console.log(editInfoFaculty)
+            const response = await axios(options)
+            if (response.data.message === 'SUCCESS') {
+                handleCloseSuaLai()
+                Swal.fire('Thành công', 'Bạn đã sửa lại thành công ', 'success')
+                getKhoa()
+            }
+        } catch (error) {
+            Swal.fire('Thất bại', `Lỗi ${error}`, 'error')
+        }
+    }
+
+    const deleteKhoa = async (id) => {
+        try {
+            const options = {
+                method: 'delete',
+                url: `http://localhost:8080/api/faculty/${id}`,
+            }
+            const response = await axios(options)
+            if (response.data.message === 'SUCCESS') {
+                handleCloseXoa()
+                Swal.fire('Thành công', 'Bạn đã xóa thành công ', 'success')
+                getKhoa()
+            }
+        } catch (error) {
+            Swal.fire('Thất bại', `Lỗi ${error}`, 'error')
+        }
+    }
 
     useEffect(() => {
         getKhoa()
@@ -98,9 +155,21 @@ const Khoa = () => {
                     <Form>
                         <Form.Group className="mb-3">
                             <Form.Label>
+                                <strong>Mã khoa</strong>
+                            </Form.Label>
+                            <Form.Control type="text"
+                                name='MA_KHOA'
+                                onChange={(e) => setCreateInfoFaculty({ ...createInfoFaculty, [e.target.name]: e.target.value })}
+                                autoFocus />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>
                                 <strong>Tên khoa</strong>
                             </Form.Label>
-                            <Form.Control type="text" autoFocus />
+                            <Form.Control type="text"
+                                name='TEN_KHOA'
+                                onChange={(e) => setCreateInfoFaculty({ ...createInfoFaculty, [e.target.name]: e.target.value })}
+                                autoFocus />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
@@ -108,7 +177,7 @@ const Khoa = () => {
                     <Button variant="secondary" onClick={handleCloseThemMoi}>
                         Hủy
                     </Button>
-                    <Button variant="primary" onClick={handleCloseThemMoi}>
+                    <Button variant="primary" onClick={()=>setKhoa()}>
                         Tạo mới
                     </Button>
                 </Modal.Footer>
@@ -117,7 +186,7 @@ const Khoa = () => {
             <Modal show={showSuaLai} onHide={handleCloseSuaLai} animation={true} scrollable={true}>
                 <Modal.Header closeButton>
                     <Modal.Title className="infor-edit">
-                        <FaEdit size={50} /> SỬA LẠI THÔNG TIN CHUYÊN NGÀNH
+                        <FaEdit size={50} /> SỬA LẠI THÔNG TIN KHOA
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -126,7 +195,10 @@ const Khoa = () => {
                             <Form.Label>
                                 <strong>Mã khoa</strong>
                             </Form.Label>
-                            <Form.Control type="text" value={seeEditInfoFaculty.MA_KHOA} disabled />
+                            <Form.Control 
+                                type="text"
+                                defaultValue={seeEditInfoFaculty.MA_KHOA}
+                            />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>
@@ -135,9 +207,8 @@ const Khoa = () => {
                             <Form.Control
                                 type="text"
                                 name="TEN_KHOA"
-                                defaultValue={seeEditInfoFaculty.TEN_KHOA}
                                 onChange={(e) => setEditInfoFaculty({ ...editInfoFaculty, [e.target.name]: e.target.value })}
-                                autoFocus
+                                defaultValue={seeEditInfoFaculty.TEN_KHOA}
                             />
                         </Form.Group>
                     </Form>
@@ -146,7 +217,7 @@ const Khoa = () => {
                     <Button variant="secondary" onClick={handleCloseSuaLai}>
                         Hủy
                     </Button>
-                    <Button variant="primary" onClick={handleCloseSuaLai}>
+                    <Button variant="primary" onClick={()=>editKhoa(seeEditInfoFaculty.MA_KHOA)}>
                         Lưu lại
                     </Button>
                 </Modal.Footer>
@@ -163,7 +234,7 @@ const Khoa = () => {
                     <strong>Lưu ý:</strong> Nếu xóa thông tin khoa này sẽ mất vĩnh viễn
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="danger" onClick={handleCloseXoa}>
+                    <Button variant="danger" onClick={()=>deleteKhoa(deleteInfoFaculty.MA_KHOA)}>
                         Chắc chắn
                     </Button>
                     <Button variant="secondary" onClick={handleCloseXoa}>

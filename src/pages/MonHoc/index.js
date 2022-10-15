@@ -3,6 +3,7 @@ import { Button, Form, Modal, Table } from 'react-bootstrap'
 import { MdAddBox } from 'react-icons/md'
 import { FaTrashAlt, FaEdit } from 'react-icons/fa'
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 function MonHoc() {
     const [subjectInput, setSubjectInput] = useState({})
@@ -44,6 +45,23 @@ function MonHoc() {
             console.log(error)
         }
     }, [])
+
+    const deleteMonHoc = async (id) => {
+        try {
+            const options = {
+                method: 'delete',
+                url: `http://localhost:8080/api/subject/${id}`,
+            }
+            const response = await axios(options)
+            if (response.data.message === 'SUCCESS') {
+                handleCloseXoa()
+                Swal.fire('Thành công', 'Bạn đã xóa thành công ', 'success')
+                getMonHoc()
+            }
+        } catch (error) {
+            Swal.fire('Thất bại', `Lỗi ${error}`, 'error')
+        }
+    }
 
     useEffect(() => {
         getMonHoc()
@@ -211,7 +229,7 @@ function MonHoc() {
                     <strong>Lưu ý:</strong> Nếu xóa thông tin sẽ mất vĩnh viễn
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="danger" onClick={handleCloseXoa}>
+                    <Button variant="danger" onClick={()=>deleteMonHoc(deleteInfoPDT.MA_MH)}>
                         Chắc chắn
                     </Button>
                     <Button variant="secondary" onClick={handleCloseXoa}>

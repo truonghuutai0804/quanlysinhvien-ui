@@ -3,6 +3,7 @@ import { Button, Form, Modal, Table } from 'react-bootstrap'
 import { MdAddBox } from 'react-icons/md'
 import { FaTrashAlt, FaEdit } from 'react-icons/fa'
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 function LopHoc() {
     const [infoClass, setInfoClass] = useState([])
@@ -42,6 +43,23 @@ function LopHoc() {
             console.log(error)
         }
     }, [])
+
+    const deleteLopHoc = async (id) => {
+        try {
+            const options = {
+                method: 'delete',
+                url: `http://localhost:8080/api/class/${id}`,
+            }
+            const response = await axios(options)
+            if (response.data.message === 'SUCCESS') {
+                handleCloseXoa()
+                Swal.fire('Thành công', 'Bạn đã xóa thành công ', 'success')
+                getLopHoc()
+            }
+        } catch (error) {
+            Swal.fire('Thất bại', `Lỗi ${error}`, 'error')
+        }
+    }
 
     useEffect(() => {
         getLopHoc()
@@ -205,7 +223,7 @@ function LopHoc() {
                     <strong>Lưu ý:</strong> Nếu xóa thông tin sẽ mất vĩnh viễn
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="danger" onClick={handleCloseXoa}>
+                    <Button variant="danger" onClick={()=>deleteLopHoc(deleteInfoClass.MA_LOP)}>
                         Chắc chắn
                     </Button>
                     <Button variant="secondary" onClick={handleCloseXoa}>

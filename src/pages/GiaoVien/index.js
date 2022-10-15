@@ -5,24 +5,40 @@ import { FaTrashAlt, FaEdit, FaEye } from 'react-icons/fa'
 import imageNguoiDung from '~/asset/images/icon_user.png'
 import { BiImageAdd } from 'react-icons/bi'
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 function GiaoVien() {
+    const [teacher, setTeacher] = useState([])
+    const [deleteTeacher, setDeleteTeacher] = useState([])
+    const [editTeacher, setEditTeacher] = useState([])
+    const [seeTeacher, setSeeTeacher] = useState([])
+
+
+
     const [showThemMoi, setShowThemMoi] = useState(false)
     const [showXemThongTin, setShowXemThongTin] = useState(false)
     const [showSuaLai, setShowSuaLai] = useState(false)
     const [showXoa, setShowXoa] = useState(false)
 
     const handleShowThemMoi = () => setShowThemMoi(true)
-    const handleShowXemThongTin = () => setShowXemThongTin(true)
-    const handleShowSuaLai = () => setShowSuaLai(true)
-    const handleShowXoa = () => setShowXoa(true)
+    const handleShowXemThongTin = (info) => {
+        setSeeTeacher(info)
+        setShowXemThongTin(true)
+    }
+    const handleShowSuaLai = (info) => {
+        setEditTeacher(info)
+        setShowSuaLai(true)
+    }
+    const handleShowXoa = (info) => {
+        setDeleteTeacher(info)
+        setShowXoa(true)
+    }
 
     const handleCloseThemMoi = () => setShowThemMoi(false)
     const handleCloseXemThongTin = () => setShowXemThongTin(false)
     const handleCloseSuaLai = () => setShowSuaLai(false)
     const handleCloseXoa = () => setShowXoa(false)
 
-    const [teacher, setTeacher] = useState([])
 
     const getGiaoVien = useCallback(async () => {
         try {
@@ -39,6 +55,23 @@ function GiaoVien() {
             console.log(error)
         }
     }, [])
+
+    const deleteGiaoVien = async (id) => {
+        try {
+            const options = {
+                method: 'delete',
+                url: `http://localhost:8080/api/trainteacher/${id}`,
+            }
+            const response = await axios(options)
+            if (response.data.message === 'SUCCESS') {
+                handleCloseXoa()
+                Swal.fire('Thành công', 'Bạn đã xóa thành công ', 'success')
+                getGiaoVien()
+            }
+        } catch (error) {
+            Swal.fire('Thất bại', `Lỗi ${error}`, 'error')
+        }
+    }
 
     useEffect(() => {
         getGiaoVien()
@@ -83,13 +116,13 @@ function GiaoVien() {
                                     <td>{item.SODIENTHOAI_GV}</td>
                                     <td>{item.TINH_THANH}</td>
                                     <td className="table-text-center">
-                                        <strong className="infor-see" onClick={handleShowXemThongTin}>
+                                        <strong className="infor-see" onClick={()=>handleShowXemThongTin(item)}>
                                             <FaEye />
                                         </strong>
-                                        <strong className="infor-edit" onClick={handleShowSuaLai}>
+                                        <strong className="infor-edit" onClick={()=>handleShowSuaLai(item)}>
                                             <FaEdit />
                                         </strong>
-                                        <strong className="infor-remove" onClick={handleShowXoa}>
+                                        <strong className="infor-remove" onClick={()=>handleShowXoa(item)}>
                                             <FaTrashAlt />
                                         </strong>
                                     </td>
@@ -249,44 +282,28 @@ function GiaoVien() {
                             <Col xs={12} md={8}>
                                 <aside>
                                     <p>
-                                        <strong>Họ tên: </strong> Trương Hữu Tài
+                                        <strong>Mã: </strong> {seeTeacher.MA_GV}
                                     </p>
                                     <p>
-                                        <strong>Ngày sinh: </strong> 08/04/2000
+                                        <strong>Họ tên: </strong> {seeTeacher.HOTEN_GV}
                                     </p>
                                     <p>
-                                        <strong>Giới tính: </strong> Nam
+                                        <strong>Ngày sinh: </strong> {seeTeacher.NGAYSINH_GV}
                                     </p>
                                     <p>
-                                        <strong>Nơi sinh: </strong> Trạm y tế phường 9, Tỉnh Vĩnh Long
+                                        <strong>Giới tính: </strong> {seeTeacher.GIOITINH_GV ===1 ? 'Nam' : 'Nữ'}
+                                    </p>
+                                    {/* <p>
+                                        <strong>Chuyên ngành: </strong> {seeTeacher.TEN_CN}
                                     </p>
                                     <p>
-                                        <strong>Email: </strong> taib1809509@student.ctu.edu.vn
+                                        <strong>Khoa: </strong> {seeTeacher.TEN_KHOA}
+                                    </p> */}
+                                    <p>
+                                        <strong>Điện thoại liên lạc: </strong> {seeTeacher.SODIENTHOAI_GV}
                                     </p>
                                     <p>
-                                        <strong>Số chứng minh nhân dân: </strong> 331857042
-                                    </p>
-                                    <p>
-                                        <strong>Lớp: </strong> DI18V7A4
-                                    </p>
-                                    <p>
-                                        <strong>Chuyên ngành: </strong>Công nghệ thông tin
-                                    </p>
-                                    <p>
-                                        <strong>Khoa: </strong> Công nghệ Thông tin & Truyền thông
-                                    </p>
-                                    <p>
-                                        <strong>Điện thoại liên lạc: </strong> 0868071229
-                                    </p>
-                                    <p>
-                                        <strong>Địa chỉ liên lạc: </strong>
-                                        18/8, Phạm Hùng, Tổ 58, Khóm 5, Phường 9,Thành phố Vĩnh Long,Tỉnh Vĩnh Long
-                                    </p>
-                                    <p>
-                                        <strong>Dân tộc: </strong> Kinh
-                                    </p>
-                                    <p>
-                                        <strong>Quốc tịch: </strong> Việt Nam
+                                        <strong>Địa chỉ liên lạc: </strong> {seeTeacher.TINH_THANH}
                                     </p>
                                 </aside>
                             </Col>
@@ -331,19 +348,19 @@ function GiaoVien() {
                                         <Form.Label>
                                             <strong>Mã giáo viên</strong>
                                         </Form.Label>
-                                        <Form.Control type="text" value="GV147" disabled />
+                                        <Form.Control type="text" value={editTeacher.MA_GV} disabled />
                                     </Form.Group>
                                     <Form.Group className="mb-3">
                                         <Form.Label>
                                             <strong>Họ Tên</strong>
                                         </Form.Label>
-                                        <Form.Control type="text" value="Trương Hữu Tài" autoFocus />
+                                        <Form.Control type="text" defaultValue={editTeacher.HOTEN_GV} autoFocus />
                                     </Form.Group>
                                     <Form.Group className="mb-3">
                                         <Form.Label>
                                             <strong>Ngày sinh</strong>
                                         </Form.Label>
-                                        <Form.Control type="date" value="2000-04-08" />
+                                        <Form.Control type="date" defaultValue={editTeacher.NGAYSINH_GV} />
                                     </Form.Group>
                                     <Form.Group className="mb-3">
                                         <Form.Label>
@@ -355,24 +372,6 @@ function GiaoVien() {
                                             </option>
                                             <option value="2">Nữ</option>
                                         </Form.Select>
-                                    </Form.Group>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>
-                                            <strong>Nơi sinh</strong>
-                                        </Form.Label>
-                                        <Form.Control type="text" value="Trạm y tế phường 9, Tỉnh Vĩnh Long" />
-                                    </Form.Group>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>
-                                            <strong>Email</strong>
-                                        </Form.Label>
-                                        <Form.Control type="email" value="taib1809509@student.ctu.edu.vn" />
-                                    </Form.Group>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>
-                                            <strong>Chứng minh nhân dân</strong>
-                                        </Form.Label>
-                                        <Form.Control type="text" value="331857042" />
                                     </Form.Group>
                                     <Form.Group className="mb-3">
                                         <Form.Label>
@@ -394,30 +393,18 @@ function GiaoVien() {
                                     </Form.Group>
                                     <Form.Group className="mb-3">
                                         <Form.Label>
-                                            <strong>Số điện thoại liên lạc</strong>
+                                            <strong>Số điện thoại</strong>
                                         </Form.Label>
-                                        <Form.Control type="text" value="0868071229" />
+                                        <Form.Control type="text" defaultValue={editTeacher.SODIENTHOAI_GV} />
                                     </Form.Group>
                                     <Form.Group className="mb-3">
                                         <Form.Label>
-                                            <strong>Địa chỉ liên lạc</strong>
+                                            <strong>Địa chỉ</strong>
                                         </Form.Label>
                                         <Form.Control
                                             type="text"
-                                            value="18/8, Phạm Hùng, Tổ 58, Khóm 5, Phường 9,Thành phố Vĩnh Long,Tỉnh Vĩnh Long"
+                                            defaultValue={editTeacher.TINH_THANH}
                                         />
-                                    </Form.Group>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>
-                                            <strong>Dân tộc</strong>
-                                        </Form.Label>
-                                        <Form.Control type="text" value="Kinh" />
-                                    </Form.Group>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>
-                                            <strong>Quốc tịch</strong>
-                                        </Form.Label>
-                                        <Form.Control type="text" value="Việt Nam" />
                                     </Form.Group>
                                 </Form>
                             </Col>
@@ -441,11 +428,11 @@ function GiaoVien() {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4>Bạn có chắc chắn xóa thông tin của nhân viên phòng đào tạo này ?</h4>
+                    <p>Bạn có chắc chắn xóa thông tin của giáo viên <strong>{deleteTeacher.HOTEN_GV}</strong> này ?</p>
                     <strong>Lưu ý:</strong> Nếu xóa thông tin sẽ mất vĩnh viễn
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="danger" onClick={handleCloseXoa}>
+                    <Button variant="danger" onClick={()=>deleteGiaoVien(deleteTeacher.MA_GV)}>
                         Chắc chắn
                     </Button>
                     <Button variant="secondary" onClick={handleCloseXoa}>

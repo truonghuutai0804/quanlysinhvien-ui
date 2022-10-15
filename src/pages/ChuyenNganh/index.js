@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Form, Modal, Table } from 'react-bootstrap'
 import { FaEdit, FaTrashAlt } from 'react-icons/fa'
 import { MdAddBox } from 'react-icons/md'
+import Swal from 'sweetalert2'
 
 const ChuyenNganh = () => {
     const [major, setMajor] = useState([])
@@ -42,6 +43,23 @@ const ChuyenNganh = () => {
             console.log(error)
         }
     }, [])
+
+    const deleteChuyenNganh = async (id) => {
+        try {
+            const options = {
+                method: 'delete',
+                url: `http://localhost:8080/api/major/${id}`,
+            }
+            const response = await axios(options)
+            if (response.data.message === 'SUCCESS') {
+                handleCloseXoa()
+                Swal.fire('Thành công', 'Bạn đã xóa thành công ', 'success')
+                getChuyenNganh()
+            }
+        } catch (error) {
+            Swal.fire('Thất bại', `Lỗi ${error}`, 'error')
+        }
+    }
 
     useEffect(() => {
         getChuyenNganh()
@@ -192,7 +210,7 @@ const ChuyenNganh = () => {
                     <strong>Lưu ý:</strong> Nếu xóa thông tin chuyên nghành này sẽ mất vĩnh viễn
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="danger" onClick={handleCloseXoa}>
+                    <Button variant="danger" onClick={()=>deleteChuyenNganh(deleteMajor.MA_CN)}>
                         Chắc chắn
                     </Button>
                     <Button variant="secondary" onClick={handleCloseXoa}>
