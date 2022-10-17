@@ -8,6 +8,7 @@ const DangNhap = () => {
     const [accountInput, setAccountInput] = useState({})
     const navigate = useNavigate()
     localStorage.removeItem('login')
+    localStorage.removeItem('level')
     const loginAccount = async (e) => {
         try {
             e.preventDefault()
@@ -19,20 +20,31 @@ const DangNhap = () => {
             }
             const response = await axios(options)
             const message = response.data.message
+            const result = response.data.res
+            var data = ''
+            var level = ''
             if (message === 'SUCCESS') {
-                const data = response.data.dataLogin[0].MA_GV
+                if(result === 'TEACHER'){
+                    data = response.data.dataLogin[0].MA_GV
+                    level = response.data.dataLogin[0].MA_CD
+                }else{
+                    data = response.data.dataLogin[0].MA_SV
+                    level = '04'
+                }
                 localStorage.setItem('login', data)
-                const level = response.data.dataLogin[0].MA_CD
+                localStorage.setItem('level', level)
                 switch (level) {
                     case '01':
-                         console.log('Quản trị viên')
                          navigate('/Admin/')
                          break;
                     case '02':
-                         console.log('Giảng viên')
+                        navigate('/Teacher')
                          break;
+                    case '03':
+                        navigate('/Trainer')
+                        break;
                     default:
-                         console.log('Phòng đào tạo')
+                         navigate('/')
                          break;
                 }
             }

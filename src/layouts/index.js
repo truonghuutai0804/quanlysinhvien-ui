@@ -1,2 +1,5 @@
 export { default as DefaultLayout } from './DefaultLayout'
 export { default as LoginLayout } from './LoginLayout'
+export { default as TeacherLayout } from './TeacherLayout'
+export { default as TrainerLayout } from './TrainerLayout'
+export { default as StudentLayout } from './StudentLayout'

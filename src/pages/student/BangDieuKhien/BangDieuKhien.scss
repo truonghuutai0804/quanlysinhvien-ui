@@ -1,0 +1,40 @@
+.wrap-bangdieukhien{
+    border: 1px solid;
+    height: 500px;
+    margin-top: 10px;
+    border-radius: 20px;
+}
+
+.content-bangdieukhien{
+    padding: 10px;
+}
+
+.sider-bangdieukhien{
+    border: 1px solid;
+    height: 320px;
+    border-radius: 20px;
+    margin-right: 10px;
+    h2, a{
+        padding: 15px;
+        text-align: center;
+    }
+    th{
+        text-align: start !important
+    }
+    th,td{
+        font-size: 15px;
+    }
+}
+
+
+.body-bangdieukhien {
+    border: 1px solid;
+    height: 480px;
+    border-radius: 20px;
+    .items-bangdieukhien{
+        margin-top: 10px !important;
+        width: 10.5rem;
+        margin: auto;
+        text-align: center;
+    }
+}

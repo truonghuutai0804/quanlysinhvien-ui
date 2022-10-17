@@ -1,15 +1,27 @@
-import BangDieuKhien from '~/pages/BangDieuKhien'
-import ThongTinSinhVien from '~/pages/ThongTinSinhVien'
-import DiemSinhVien from '~/pages/DiemSinhVien'
-import PhongDaoTao from '~/pages/PhongDaoTao'
-import GiaoVien from '~/pages/GiaoVien'
-import MonHoc from '~/pages/MonHoc'
-import LopHoc from '~/pages/LopHoc'
-import TaiKhoan from '~/pages/TaiKhoan'
-import DangNhap from '~/pages/DangNhap'
-import ChuyenNganh from '~/pages/ChuyenNganh'
-import Khoa from '~/pages/Khoa'
 import { LoginLayout } from '~/layouts'
+import {
+    BangDieuKhien,
+    ChuyenNganh,
+    DiemSinhVien,
+    GiaoVien,
+    Khoa,
+    LopHoc,
+    MonHoc,
+    PhongDaoTao,
+    TaiKhoan,
+    ThongTinSinhVien,
+} from '~/pages/admin'
+
+import { 
+    BangDieuKhienSV, 
+    DangKiHocPhanSV, 
+    KetQuaHocTapSV, 
+    ThongTinCaNhanSV 
+} from '~/pages/student'
+
+import BangDieuKhienGV from '~/pages/teacher/BangDieuKhien'
+
+import DangNhap from '~/pages/DangNhap'
 
 // Truy cập trang sau khi đăng nhập
 const privateRoutes = [
@@ -26,5 +38,28 @@ const privateRoutes = [
     { path: '/DangNhap', component: DangNhap, layout: LoginLayout },
 ]
 
+const teacherRoutes = [
+    { path: '/Teacher/', component: BangDieuKhienGV },
+    { path: '/Teacher/ThongTinCaNhan', component: GiaoVien },
+    { path: '/Teacher/DiemSinhVien', component: DiemSinhVien },
+    { path: '/DangNhap', component: DangNhap, layout: LoginLayout },
+]
 
-export { privateRoutes }
+const trainerRoutes = [
+    { path: '/Trainer/', component: BangDieuKhien },
+    { path: '/Trainer/ThongTinCaNhan', component: ThongTinSinhVien },
+    { path: '/Trainer/DanhSachSinhVien', component: PhongDaoTao },
+    { path: '/Trainer/DanhSachGiaoVien', component: GiaoVien },
+    { path: '/Trainer/TaiKhoan', component: TaiKhoan },
+    { path: '/DangNhap', component: DangNhap, layout: LoginLayout },
+]
+
+const studentRoutes = [
+    { path: '/', component: BangDieuKhienSV },
+    { path: '/ThongTinCaNhan', component: ThongTinCaNhanSV },
+    { path: '/DangKiHocPhan', component: DangKiHocPhanSV },
+    { path: '/KetQua', component: KetQuaHocTapSV },
+    { path: '/DangNhap', component: DangNhap, layout: LoginLayout },
+]
+
+export { privateRoutes, teacherRoutes, trainerRoutes, studentRoutes }
