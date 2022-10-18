@@ -1,0 +1,26 @@
+.wrap-ketquahoctap{
+    border: 1px solid;
+    height: 500px;
+    margin-top: 10px;
+    border-radius: 20px;
+    h2{
+        margin: 20px 0px;
+    }
+    .form-ketquahoctap{
+        display: flex !important;
+        justify-content: center;
+        margin: 10px 0px;
+        .button-ketquahoctap{
+            height: 26px;
+        }
+    }
+    b{
+        margin: 0px 10px;
+    }
+    .ketquahoctap-text, h2{
+        text-align: center;
+    }
+    .namhoc-ketquahoctap{
+        width: auto !important;
+    }
+}

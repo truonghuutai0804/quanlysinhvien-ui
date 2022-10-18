@@ -9,15 +9,15 @@ import axios from 'axios'
 const BangDieuKhien = () => {
     const [teacher, setTeacher] = useState([])
     const maGV = localStorage.getItem('login')
-    const getSinhVien = useCallback(async (id) => {
+    const getGiaoVien = useCallback(async (id) => {
         try {
             const options = {
                 method: 'get',
-                url: `http://localhost:8080/api/student/${id}`,
+                url: `http://localhost:8080/api/teacher/${id}`,
             }
             const response = await axios(options)
-            const teachers = response.data.data[0]
-            if (response.data.status === 400) {
+            const teachers = response.data.dataGV[0]
+            if (response.data.message === 'SUCCESS') {
                 setTeacher(teachers)
             }
         } catch (error) {
@@ -26,36 +26,36 @@ const BangDieuKhien = () => {
     }, [])
 
     useEffect(() => {
-        getSinhVien(maGV)
-    }, [getSinhVien, maGV])
+        getGiaoVien(maGV)
+    }, [getGiaoVien, maGV])
 
     return (
         <>
             <Container className="wrap-bangdieukhien">
                 <Row className="content-bangdieukhien">
                     <Col className="sider-bangdieukhien">
-                        <h2>THÔNG TIN SINH VIÊN</h2>
+                        <h2>THÔNG TIN GIÁO VIÊN</h2>
                         <Table hover>
                             <tbody>
                                 <tr>
                                     <th>Mã GV:</th>
-                                    <td>{student.MA_GV}</td>
+                                    <td>{teacher.MA_GV}</td>
                                 </tr>
                                 <tr>
                                     <th>Họ Tên:</th>
-                                    <td>{student.HOTEN_GV}</td>
+                                    <td>{teacher.HOTEN_GV}</td>
                                 </tr>
                                 <tr>
                                     <th>Ngày sinh:</th>
-                                    <td>{student.NGAYSINH_GV}</td>
+                                    <td>{teacher.NGAYSINH_GV}</td>
                                 </tr>
                                 <tr>
                                     <th>Giới tính:</th>
-                                    <td>{student.GIOITINH_GV ? 'Nam' : 'Nữ'}</td>
+                                    <td>{teacher.GIOITINH_GV ? 'Nam' : 'Nữ'}</td>
                                 </tr>
                             </tbody>
                         </Table>
-                        <Link to="/ThongTinCaNhan">
+                        <Link to="/Teacher/ThongTinCaNhan">
                             <h4>Xem thêm ...</h4>
                         </Link>
                     </Col>
@@ -63,17 +63,17 @@ const BangDieuKhien = () => {
                         <Row>
                             <Col>
                                 <Card className="items-bangdieukhien">
-                                    <Card.Link as={Link} to="/DangKiHocPhan">
+                                    <Card.Link as={Link} to="/Teacher/ThemHocPhan">
                                         <Card.Img variant="top" src={imageDangKiHocPhan} />
-                                        <Card.Title>Đăng kí học phần</Card.Title>
+                                        <Card.Title>Thêm học phần</Card.Title>
                                     </Card.Link>
                                 </Card>
                             </Col>
                             <Col>
                                 <Card className="items-bangdieukhien">
-                                    <Card.Link as={Link} to="/KetQua">
+                                    <Card.Link as={Link} to="/Teacher/DiemSinhVien">
                                         <Card.Img variant="top" src={imageKetQuaHocTap} />
-                                        <Card.Title>Kết quả học tập</Card.Title>
+                                        <Card.Title>Thêm điểm</Card.Title>
                                     </Card.Link>
                                 </Card>
                             </Col>

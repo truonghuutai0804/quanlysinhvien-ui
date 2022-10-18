@@ -54,7 +54,6 @@ function KetQuaHocTap() {
             if (response.data.message === 'SUCCESS') {
                 setResult(results)
             }
-            console.log(result);
         } catch (error) {
             console.log(error)
         }

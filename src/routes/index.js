@@ -20,6 +20,8 @@ import {
 } from '~/pages/student'
 
 import BangDieuKhienGV from '~/pages/teacher/BangDieuKhien'
+import ThongTinCaNhanGV from '~/pages/teacher/ThongTinCaNhan'
+import DiemSinhVienGV from '~/pages/teacher/DiemSinhVien'
 
 import DangNhap from '~/pages/DangNhap'
 
@@ -40,8 +42,9 @@ const privateRoutes = [
 
 const teacherRoutes = [
     { path: '/Teacher/', component: BangDieuKhienGV },
-    { path: '/Teacher/ThongTinCaNhan', component: GiaoVien },
-    { path: '/Teacher/DiemSinhVien', component: DiemSinhVien },
+    { path: '/Teacher/ThongTinCaNhan', component: ThongTinCaNhanGV },
+    { path: '/Teacher/ThemHocPhan', component: DiemSinhVienGV },
+    { path: '/Teacher/DiemSinhVien', component: DiemSinhVienGV },
     { path: '/DangNhap', component: DangNhap, layout: LoginLayout },
 ]
 
