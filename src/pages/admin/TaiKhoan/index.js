@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Table, Tabs, Tab } from 'react-bootstrap'
-import { MdAddBox } from 'react-icons/md'
 import { FaTrashAlt, FaEdit } from 'react-icons/fa'
 import { GoPrimitiveDot } from 'react-icons/go'
 import axios from 'axios'
@@ -51,11 +50,6 @@ function TaiKhoan() {
         <>
             <aside className="ms-4">
                 <h2 className="m-2">Thông tin tài khoản</h2>
-                <aside className="d-flex justify-content-between m-3">
-                    <Button variant="outline-primary">
-                        <MdAddBox /> Thêm tài khoản mới
-                    </Button>
-                </aside>
                 <Tabs activeKey={key} onSelect={(k) => setKey(k)} className="mb-3 justify-content-center">
                     <Tab eventKey="quan-tri-vien" title="Quản trị viên">
                         <Table bordered hover>

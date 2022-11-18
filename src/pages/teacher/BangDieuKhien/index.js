@@ -63,17 +63,9 @@ const BangDieuKhien = () => {
                         <Row>
                             <Col>
                                 <Card className="items-bangdieukhien">
-                                    <Card.Link as={Link} to="/Teacher/ThemHocPhan">
-                                        <Card.Img variant="top" src={imageDangKiHocPhan} />
-                                        <Card.Title>Thêm học phần</Card.Title>
-                                    </Card.Link>
-                                </Card>
-                            </Col>
-                            <Col>
-                                <Card className="items-bangdieukhien">
                                     <Card.Link as={Link} to="/Teacher/DiemSinhVien">
                                         <Card.Img variant="top" src={imageKetQuaHocTap} />
-                                        <Card.Title>Thêm điểm</Card.Title>
+                                        <Card.Title>Quản lý điểm</Card.Title>
                                     </Card.Link>
                                 </Card>
                             </Col>

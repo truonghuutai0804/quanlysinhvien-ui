@@ -4,8 +4,10 @@ import { MdAddBox } from 'react-icons/md'
 import { FaTrashAlt, FaEdit, FaEye } from 'react-icons/fa'
 import imageNguoiDung from '~/asset/images/icon_user.png'
 import axios from 'axios'
+import { GiReturnArrow } from 'react-icons/gi'
+import { Link } from 'react-router-dom'
 
-function ThongTinSinhVien() {
+function DanhSachSinhVien() {
     const [student, setStudent] = useState([])
     const [infoClass, setInfoClass] = useState([])
     const [infoProvince, setInfoProvince] = useState([])
@@ -56,38 +58,6 @@ function ThongTinSinhVien() {
             console.log(error)
         }
     }, [])
-
-    // const getSinhVienCM = useCallback(async () => {
-    //     try {
-    //         const options = {
-    //             method: 'get',
-    //             url: 'http://localhost:8080/api/student',
-    //         }
-    //         const response = await axios(options)
-    //         const students = response.data.data
-    //         if (response.data.status === 400) {
-    //             setStudent(students)
-    //         }
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }, [])
-
-    const getSinhVienMC = async (sort) => {
-        try {
-            const options = {
-                method: 'get',
-                url: `http://localhost:8080/api/studentZ?SORT=${sort}`,
-            }
-            const response = await axios(options)
-            const students = response.data.data
-            if (response.data.status === 400) {
-                setStudent(students)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
 
     const getLop = useCallback(async () => {
         try {
@@ -179,78 +149,77 @@ function ThongTinSinhVien() {
 
     return (
         <>
-            <aside className="ms-4">
-                <h2 className="m-2">Thông tin sinh viên</h2>
-                <aside className="d-flex justify-content-between m-3">
-                    <Button variant="outline-primary" onClick={handleShowThemMoi}>
-                        <MdAddBox /> Thêm sinh viên mới
-                    </Button>
-                    <Form.Select className="w-25" name="SORT" onChange={(e) => getSinhVienMC(e.target.value)}>
-                        <option value="0">Sắp xếp từ cũ đến mới</option>
-                        <option value="1">Sắp xếp từ mới đến cũ</option>
-                        <option value="2">Sắp xếp tên từ A đến Z</option>
-                        <option value="3">Sắp xếp tên từ Z đến A</option>
-                    </Form.Select>
+            <Container>
+                <aside className="ms-4">
+                    <h2 className="my-5 text-center">DANH SÁCH SINH VIÊN</h2>
+                    <aside className="d-flex justify-content-between m-3">
+                        <Link className="btn btn-outline-secondary" to="/Trainer">
+                            <GiReturnArrow /> Quay Lại
+                        </Link>
+                        <Button variant="outline-primary" onClick={handleShowThemMoi}>
+                            <MdAddBox /> Thêm sinh viên mới
+                        </Button>
+                    </aside>
+                    <Table bordered hover>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>MSSV</th>
+                                <th>Họ tên</th>
+                                <th>Giới tính</th>
+                                <th>Ngày sinh</th>
+                                <th>Lớp</th>
+                                <th>Ngành học</th>
+                                <th>Khoa</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {student &&
+                                student.map((item, idx) => (
+                                    <tr key={idx}>
+                                        <td className="table-text-center">{idx + 1}</td>
+                                        <td>{item.MA_SV}</td>
+                                        <td>{item.HOTEN_SV}</td>
+                                        <td>{item.GIOITINH_SV === 1 ? 'Nam' : 'Nữ'}</td>
+                                        <td>{item.NGAYSINH_SV}</td>
+                                        <td>{item.TEN_LOP}</td>
+                                        <td>{item.TEN_CN}</td>
+                                        <td>{item.TEN_KHOA}</td>
+                                        <td className="table-text-center">
+                                            <strong
+                                                className="infor-see"
+                                                onClick={() => {
+                                                    handleShowXemThongTin(item)
+                                                }}
+                                            >
+                                                <FaEye />
+                                            </strong>
+
+                                            <strong
+                                                className="infor-edit"
+                                                onClick={() => {
+                                                    handleShowSuaLai(item)
+                                                }}
+                                            >
+                                                <FaEdit />
+                                            </strong>
+
+                                            <strong
+                                                className="infor-remove"
+                                                onClick={() => {
+                                                    handleShowXoa(item)
+                                                }}
+                                            >
+                                                <FaTrashAlt />
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                ))}
+                        </tbody>
+                    </Table>
                 </aside>
-                <Table bordered hover>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>MSSV</th>
-                            <th>Họ tên</th>
-                            <th>Giới tính</th>
-                            <th>Ngày sinh</th>
-                            <th>Lớp</th>
-                            <th>Ngành học</th>
-                            <th>Khoa</th>
-                            <th>Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {student &&
-                            student.map((item, idx) => (
-                                <tr key={idx}>
-                                    <td className="table-text-center">{idx + 1}</td>
-                                    <td>{item.MA_SV}</td>
-                                    <td>{item.HOTEN_SV}</td>
-                                    <td>{item.GIOITINH_SV === 1 ? 'Nam' : 'Nữ'}</td>
-                                    <td>{item.NGAYSINH_SV}</td>
-                                    <td>{item.TEN_LOP}</td>
-                                    <td>{item.TEN_CN}</td>
-                                    <td>{item.TEN_KHOA}</td>
-                                    <td className="table-text-center">
-                                        <strong
-                                            className="infor-see"
-                                            onClick={() => {
-                                                handleShowXemThongTin(item)
-                                            }}
-                                        >
-                                            <FaEye />
-                                        </strong>
-
-                                        <strong
-                                            className="infor-edit"
-                                            onClick={() => {
-                                                handleShowSuaLai(item)
-                                            }}
-                                        >
-                                            <FaEdit />
-                                        </strong>
-
-                                        <strong
-                                            className="infor-remove"
-                                            onClick={() => {
-                                                handleShowXoa(item)
-                                            }}
-                                        >
-                                            <FaTrashAlt />
-                                        </strong>
-                                    </td>
-                                </tr>
-                            ))}
-                    </tbody>
-                </Table>
-            </aside>
+            </Container>
 
             <Modal show={showThemMoi} onHide={handleCloseThemMoi} animation={true} scrollable={true}>
                 <Modal.Header closeButton>
@@ -522,7 +491,7 @@ function ThongTinSinhVien() {
                                 >
                                     {infoClass &&
                                         infoClass.map((item, idx) => (
-                                            <option key={idx} value={item.MA_LOP}>
+                                            <option key={idx} value={item.MA_LOP} >
                                                 {item.TEN_LOP}
                                             </option>
                                         ))}
@@ -554,7 +523,7 @@ function ThongTinSinhVien() {
                                     onChange={(e) =>
                                         setEditInfoSV({
                                             ...editInfoSV,
-                                            [e.target.name]: e.target.value,
+                                            [e.target.name]: e.target.value
                                         })
                                     }
                                 >
@@ -573,7 +542,7 @@ function ThongTinSinhVien() {
                     <Button variant="secondary" onClick={handleCloseSuaLai}>
                         Hủy
                     </Button>
-                    <Button variant="primary" onClick={() => editSinhVien(editInfoSV.MA_SV)}>
+                    <Button variant="primary" onClick={()=>editSinhVien(editInfoSV.MA_SV)}>
                         Lưu lại
                     </Button>
                 </Modal.Footer>
@@ -604,4 +573,4 @@ function ThongTinSinhVien() {
     )
 }
 
-export default ThongTinSinhVien
+export default DanhSachSinhVien

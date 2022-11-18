@@ -7,6 +7,8 @@ import Swal from 'sweetalert2'
 
 function LopHoc() {
     const [infoClass, setInfoClass] = useState([])
+    const [major, setMajor] = useState([])
+    const [addClass, setAddClass] = useState([])
     const [editInfoClass, setEditInfoClass] = useState([])
     const [deleteInfoClass, setDeleteInfoClass] = useState([])
 
@@ -28,6 +30,22 @@ function LopHoc() {
     const handleCloseSuaLai = () => setShowSuaLai(false)
     const handleCloseXoa = () => setShowXoa(false)
 
+    const getChuyenNganh = useCallback(async () => {
+        try {
+            const options = {
+                method: 'get',
+                url: 'http://localhost:8080/api/major',
+            }
+            const response = await axios(options)
+            const majors = response.data.data
+            if (response.data.status === 400) {
+                setMajor(majors)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }, [])
+
     const getLopHoc = useCallback(async () => {
         try {
             const options = {
@@ -43,6 +61,42 @@ function LopHoc() {
             console.log(error)
         }
     }, [])
+
+    const createLopHoc = async () => {
+        try {
+            const options = {
+                method: 'post',
+                url: `http://localhost:8080/api/class`,
+                data: addClass,
+            }
+            const response = await axios(options)
+            if (response.data.message === 'SUCCESS') {
+                handleCloseThemMoi()
+                Swal.fire('Thành công', 'Thêm lớp mới thành công ', 'success')
+                getLopHoc()
+            }
+        } catch (error) {
+            Swal.fire('Thất bại', `Lỗi ${error}`, 'error')
+        }
+    }
+
+    const updateLopHoc = async (id) => {
+        try {
+            const options = {
+                method: 'put',
+                url: `http://localhost:8080/api/class/${id}`,
+                data: editInfoClass,
+            }
+            const response = await axios(options)
+            if (response.data.message === 'SUCCESS') {
+                handleCloseSuaLai()
+                Swal.fire('Thành công', 'Sửa thông tin lớp học thành công ', 'success')
+                getLopHoc()
+            }
+        } catch (error) {
+            Swal.fire('Thất bại', `Lỗi ${error}`, 'error')
+        }
+    }
 
     const deleteLopHoc = async (id) => {
         try {
@@ -62,8 +116,9 @@ function LopHoc() {
     }
 
     useEffect(() => {
+        getChuyenNganh()
         getLopHoc()
-    }, [getLopHoc])
+    }, [getLopHoc, getChuyenNganh])
 
     return (
         <>
@@ -129,19 +184,42 @@ function LopHoc() {
                     <Form>
                         <Form.Group className="mb-3">
                             <Form.Label>
-                                <strong>Tên môn học</strong>
+                                <strong>Mã lớp</strong>
                             </Form.Label>
-                            <Form.Control type="text" autoFocus />
+                            <Form.Control
+                                type="text"
+                                name="MA_LOP"
+                                onChange={(e) => setAddClass({ ...addClass, [e.target.name]: e.target.value })}
+                                autoFocus
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>
+                                <strong>Tên lớp</strong>
+                            </Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="TEN_LOP"
+                                onChange={(e) => setAddClass({ ...addClass, [e.target.name]: e.target.value })}
+                            />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>
                                 <strong>Chuyên ngành</strong>
                             </Form.Label>
-                            <Form.Select>
-                                <option value="1" selected>
-                                    Công nghệ thông tin
-                                </option>
-                                <option value="2">Khoa học máy tính</option>
+                            <Form.Select
+                                name="MA_CN"
+                                onChange={(e) => setAddClass({ ...addClass, [e.target.name]: e.target.value })}
+                            >
+                                <option value="">Chọn chuyên ngành</option>
+                                {major &&
+                                    major.map((item, idx) => (
+                                        <>
+                                            <option key={idx} value={item.MA_CN}>
+                                                {item.TEN_CN}
+                                            </option>
+                                        </>
+                                    ))}
                             </Form.Select>
                         </Form.Group>
                     </Form>
@@ -150,7 +228,7 @@ function LopHoc() {
                     <Button variant="secondary" onClick={handleCloseThemMoi}>
                         Hủy
                     </Button>
-                    <Button variant="primary" onClick={handleCloseThemMoi}>
+                    <Button variant="primary" onClick={createLopHoc}>
                         Tạo mới
                     </Button>
                 </Modal.Footer>
@@ -174,28 +252,35 @@ function LopHoc() {
                             <Form.Label>
                                 <strong>Tên lớp học</strong>
                             </Form.Label>
-                            <Form.Control type="text" value={editInfoClass.TEN_LOP} autoFocus />
+                            <Form.Control
+                                type="text"
+                                value={editInfoClass.TEN_LOP}
+                                onChange={(e) =>
+                                    setEditInfoClass({ ...editInfoClass, [e.target.name]: e.target.value })
+                                }
+                                autoFocus
+                            />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>
                                 <strong>Chuyên ngành</strong>
                             </Form.Label>
-                            <Form.Select>
-                                <option value="1" selected>
-                                    Công nghệ thông tin
-                                </option>
-                                <option value="2">Khoa học máy tính</option>
-                            </Form.Select>
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Label>
-                                <strong>Khoa</strong>
-                            </Form.Label>
-                            <Form.Select>
-                                <option value="1" selected>
-                                    Công nghệ thông tin và truyền thông
-                                </option>
-                                <option value="2">Kinh tế</option>
+                            <Form.Select
+                                name="MA_CN"
+                                value={editInfoClass.MA_CN}
+                                onChange={(e) =>
+                                    setEditInfoClass({ ...editInfoClass, [e.target.name]: e.target.value })
+                                }
+                            >
+                                <option value="">Chọn chuyên ngành</option>
+                                {major &&
+                                    major.map((item, idx) => (
+                                        <>
+                                            <option key={idx} value={item.MA_CN}>
+                                                {item.TEN_CN}
+                                            </option>
+                                        </>
+                                    ))}
                             </Form.Select>
                         </Form.Group>
                     </Form>
@@ -204,7 +289,7 @@ function LopHoc() {
                     <Button variant="secondary" onClick={handleCloseSuaLai}>
                         Hủy
                     </Button>
-                    <Button variant="primary" onClick={handleCloseSuaLai}>
+                    <Button variant="primary" onClick={()=>updateLopHoc(editInfoClass.MA_LOP)}>
                         Lưu lại
                     </Button>
                 </Modal.Footer>
@@ -223,7 +308,7 @@ function LopHoc() {
                     <strong>Lưu ý:</strong> Nếu xóa thông tin sẽ mất vĩnh viễn
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="danger" onClick={()=>deleteLopHoc(deleteInfoClass.MA_LOP)}>
+                    <Button variant="danger" onClick={() => deleteLopHoc(deleteInfoClass.MA_LOP)}>
                         Chắc chắn
                     </Button>
                     <Button variant="secondary" onClick={handleCloseXoa}>

@@ -7,8 +7,8 @@ import Swal from 'sweetalert2'
 
 function MonHoc() {
     const [subjectInput, setSubjectInput] = useState({})
-    const [editSubjectInput, setEditSubjectInput] = useState({})
     const [subject, setSubject] = useState([])
+    const [faculty, setFaculty] = useState([])
     const [editInfoPDT, setEditInfoPDT] = useState([])
     const [deleteInfoPDT, setDeleteInfoPDT] = useState([])
 
@@ -46,6 +46,58 @@ function MonHoc() {
         }
     }, [])
 
+    const getKhoa = useCallback(async () => {
+        try {
+            const options = {
+                method: 'get',
+                url: 'http://localhost:8080/api/faculty',
+            }
+            const response = await axios(options)
+            const faculties = response.data.data
+            if (response.data.status === 400) {
+                setFaculty(faculties)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }, [])
+
+    const createMonHoc = async () => {
+        try {
+            const options = {
+                method: 'post',
+                url: `http://localhost:8080/api/subject/`,
+                data: subjectInput,
+            }
+            const response = await axios(options)
+            if (response.data.message === 'SUCCESS') {
+                handleCloseThemMoi()
+                Swal.fire('Thành công', 'Thêm môn học thành công ', 'success')
+                getMonHoc()
+            }
+        } catch (error) {
+            Swal.fire('Thất bại', `Lỗi ${error}`, 'error')
+        }
+    }
+
+    const updateMonHoc = async (id) => {
+        try {
+            const options = {
+                method: 'put',
+                url: `http://localhost:8080/api/subject/${id}`,
+                data: editInfoPDT,
+            }
+            const response = await axios(options)
+            if (response.data.message === 'SUCCESS') {
+                handleCloseSuaLai()
+                Swal.fire('Thành công', 'Sửa môn học thành công ', 'success')
+                getMonHoc()
+            }
+        } catch (error) {
+            Swal.fire('Thất bại', `Lỗi ${error}`, 'error')
+        }
+    }
+
     const deleteMonHoc = async (id) => {
         try {
             const options = {
@@ -65,7 +117,8 @@ function MonHoc() {
 
     useEffect(() => {
         getMonHoc()
-    }, [getMonHoc])
+        getKhoa()
+    }, [getMonHoc, getKhoa])
 
     return (
         <>
@@ -129,13 +182,43 @@ function MonHoc() {
                     <Form>
                         <Form.Group className="mb-3">
                             <Form.Label>
+                                <strong>Mã môn học</strong>
+                            </Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="MA_MH"
+                                onChange={(e) => setSubjectInput({ ...subjectInput, [e.target.name]: e.target.value })}
+                                autoFocus
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>
                                 <strong>Tên môn học</strong>
                             </Form.Label>
                             <Form.Control
                                 type="text"
+                                name="TEN_MH"
                                 onChange={(e) => setSubjectInput({ ...subjectInput, [e.target.name]: e.target.value })}
-                                autoFocus
                             />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>
+                                <strong>Khoa</strong>
+                            </Form.Label>
+                            <Form.Select
+                                name="MA_KHOA"
+                                onChange={(e) => setSubjectInput({ ...subjectInput, [e.target.name]: e.target.value })}
+                            >
+                                <option value="">Chọn khoa</option>
+                                {faculty &&
+                                    faculty.map((item, idx) => (
+                                        <>
+                                            <option key={idx} value={item.MA_KHOA}>
+                                                {item.TEN_KHOA}
+                                            </option>
+                                        </>
+                                    ))}
+                            </Form.Select>
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>
@@ -143,6 +226,7 @@ function MonHoc() {
                             </Form.Label>
                             <Form.Control
                                 type="text"
+                                name="TIN_CHI"
                                 onChange={(e) => setSubjectInput({ ...subjectInput, [e.target.name]: e.target.value })}
                             />
                         </Form.Group>
@@ -152,7 +236,7 @@ function MonHoc() {
                     <Button variant="secondary" onClick={handleCloseThemMoi}>
                         Hủy
                     </Button>
-                    <Button variant="primary" onClick={handleCloseThemMoi}>
+                    <Button variant="primary" onClick={createMonHoc}>
                         Tạo mới
                     </Button>
                 </Modal.Footer>
@@ -173,9 +257,6 @@ function MonHoc() {
                             <Form.Control
                                 type="text"
                                 value={editInfoPDT.MA_MH}
-                                onChange={(e) =>
-                                    setEditSubjectInput({ ...editSubjectInput, [e.target.name]: e.target.value })
-                                }
                                 disabled
                             />
                         </Form.Group>
@@ -185,12 +266,31 @@ function MonHoc() {
                             </Form.Label>
                             <Form.Control
                                 type="text"
+                                name="TEN_MH"
                                 value={editInfoPDT.TEN_MH}
-                                onChange={(e) =>
-                                    setEditSubjectInput({ ...editSubjectInput, [e.target.name]: e.target.value })
-                                }
+                                onChange={(e) => setEditInfoPDT({ ...editInfoPDT, [e.target.name]: e.target.value })}
                                 autoFocus
                             />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>
+                                <strong>Khoa</strong>
+                            </Form.Label>
+                            <Form.Select
+                                name="MA_KHOA"
+                                value={editInfoPDT.MA_KHOA}
+                                onChange={(e) => setEditInfoPDT({ ...editInfoPDT, [e.target.name]: e.target.value })}
+                            >
+                                <option value="">Chọn nhóm học phần</option>
+                                {faculty &&
+                                    faculty.map((item, idx) => (
+                                        <>
+                                            <option key={idx} value={item.MA_KHOA}>
+                                                {item.TEN_KHOA}
+                                            </option>
+                                        </>
+                                    ))}
+                            </Form.Select>
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>
@@ -198,10 +298,9 @@ function MonHoc() {
                             </Form.Label>
                             <Form.Control
                                 type="text"
+                                name="TIN_CHI"
                                 value={editInfoPDT.TIN_CHI}
-                                onChange={(e) =>
-                                    setEditSubjectInput({ ...editSubjectInput, [e.target.name]: e.target.value })
-                                }
+                                onChange={(e) => setEditInfoPDT({ ...editInfoPDT, [e.target.name]: e.target.value })}
                             />
                         </Form.Group>
                     </Form>
@@ -210,7 +309,7 @@ function MonHoc() {
                     <Button variant="secondary" onClick={handleCloseSuaLai}>
                         Hủy
                     </Button>
-                    <Button variant="primary" onClick={handleCloseSuaLai}>
+                    <Button variant="primary" onClick={()=>updateMonHoc(editInfoPDT.MA_MH)}>
                         Lưu lại
                     </Button>
                 </Modal.Footer>
@@ -229,7 +328,7 @@ function MonHoc() {
                     <strong>Lưu ý:</strong> Nếu xóa thông tin sẽ mất vĩnh viễn
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="danger" onClick={()=>deleteMonHoc(deleteInfoPDT.MA_MH)}>
+                    <Button variant="danger" onClick={() => deleteMonHoc(deleteInfoPDT.MA_MH)}>
                         Chắc chắn
                     </Button>
                     <Button variant="secondary" onClick={handleCloseXoa}>

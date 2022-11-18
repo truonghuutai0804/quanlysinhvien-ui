@@ -7,6 +7,8 @@ import Swal from 'sweetalert2'
 
 const ChuyenNganh = () => {
     const [major, setMajor] = useState([])
+    const [faculty, setFaculty] = useState([])
+    const [addMajor, setAddMajor] = useState([])
     const [editMajor, setEditMajor] = useState([])
     const [deleteMajor, setDeleteMajor] = useState([])
 
@@ -44,6 +46,58 @@ const ChuyenNganh = () => {
         }
     }, [])
 
+    const getKhoa = useCallback(async () => {
+        try {
+            const options = {
+                method: 'get',
+                url: 'http://localhost:8080/api/faculty',
+            }
+            const response = await axios(options)
+            const faculties = response.data.data
+            if (response.data.status === 400) {
+                setFaculty(faculties)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }, [])
+
+    const createChuyenNganh = async () => {
+        try {
+            const options = {
+                method: 'post',
+                url: `http://localhost:8080/api/major/`,
+                data: addMajor,
+            }
+            const response = await axios(options)
+            if (response.data.message === 'SUCCESS') {
+                handleCloseThemMoi()
+                Swal.fire('Thành công', 'Thêm chuyên ngành thành công ', 'success')
+                getChuyenNganh()
+            }
+        } catch (error) {
+            Swal.fire('Thất bại', `Lỗi ${error}`, 'error')
+        }
+    }
+
+    const updateChuyenNganh = async (id) => {
+        try {
+            const options = {
+                method: 'put',
+                url: `http://localhost:8080/api/major/${id}`,
+                data: editMajor,
+            }
+            const response = await axios(options)
+            if (response.data.message === 'SUCCESS') {
+                handleCloseSuaLai()
+                Swal.fire('Thành công', 'Thêm chuyên ngành thành công ', 'success')
+                getChuyenNganh()
+            }
+        } catch (error) {
+            Swal.fire('Thất bại', `Lỗi ${error}`, 'error')
+        }
+    }
+
     const deleteChuyenNganh = async (id) => {
         try {
             const options = {
@@ -63,7 +117,8 @@ const ChuyenNganh = () => {
 
     useEffect(() => {
         getChuyenNganh()
-    }, [getChuyenNganh])
+        getKhoa()
+    }, [getChuyenNganh, getKhoa])
 
     return (
         <>
@@ -120,7 +175,7 @@ const ChuyenNganh = () => {
                 <Modal.Header closeButton>
                     <Modal.Title className="infor-new">
                         <MdAddBox size={50} />
-                        THÊM SINH VIÊN MỚI
+                        THÊM CHUYÊN NGÀNH MỚI
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="show-grid">
@@ -129,18 +184,41 @@ const ChuyenNganh = () => {
                             <Form.Label>
                                 <strong>Khoa</strong>
                             </Form.Label>
-                            <Form.Select>
-                                <option value="1" selected>
-                                    Công nghệ thông tin & Truyền thông
-                                </option>
-                                <option value="2">Kinh tế</option>
+                            <Form.Select
+                                name="MA_KHOA"
+                                onChange={(e) => setAddMajor({ ...addMajor, [e.target.name]: e.target.value })}
+                            >
+                                <option value="">Chọn khoa</option>
+                                {faculty &&
+                                    faculty.map((item, idx) => (
+                                        <>
+                                            <option key={idx} value={item.MA_KHOA}>
+                                                {item.TEN_KHOA}
+                                            </option>
+                                        </>
+                                    ))}
                             </Form.Select>
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>
+                                <strong>Mã chuyên ngành</strong>
+                            </Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="MA_CN"
+                                onChange={(e) => setAddMajor({ ...addMajor, [e.target.name]: e.target.value })}
+                                autoFocus
+                            />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>
                                 <strong>Tên chuyên ngành</strong>
                             </Form.Label>
-                            <Form.Control type="text" autoFocus />
+                            <Form.Control
+                                type="text"
+                                name="TEN_CN"
+                                onChange={(e) => setAddMajor({ ...addMajor, [e.target.name]: e.target.value })}
+                            />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
@@ -148,7 +226,7 @@ const ChuyenNganh = () => {
                     <Button variant="secondary" onClick={handleCloseThemMoi}>
                         Hủy
                     </Button>
-                    <Button variant="primary" onClick={handleCloseThemMoi}>
+                    <Button variant="primary" onClick={createChuyenNganh}>
                         Tạo mới
                     </Button>
                 </Modal.Footer>
@@ -163,27 +241,42 @@ const ChuyenNganh = () => {
                 <Modal.Body>
                     <Form>
                         <Form.Group className="mb-3">
-                            <Form.Group className="mb-3">
-                                <Form.Label>
-                                    <strong>Tên chuyên ngành</strong>
-                                </Form.Label>
-                                <Form.Control type="text" value={editMajor.MA_CN} disabled />
-                            </Form.Group>
+                            <Form.Label>
+                                <strong>Mã chuyên ngành</strong>
+                            </Form.Label>
+                            <Form.Control type="text" value={editMajor.MA_CN} disabled />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
                             <Form.Label>
                                 <strong>Khoa</strong>
                             </Form.Label>
-                            <Form.Select>
-                                <option value="1" selected>
-                                    Công nghệ thông tin & Truyền thông
-                                </option>
-                                <option value="2">Kinh tế</option>
+                            <Form.Select
+                                name="MA_KHOA"
+                                value={editMajor.MA_KHOA}
+                                onChange={(e) => setEditMajor({ ...editMajor, [e.target.name]: e.target.value })}
+                            >
+                                <option value="">Chọn khoa</option>
+                                {faculty &&
+                                    faculty.map((item, idx) => (
+                                        <>
+                                            <option key={idx} value={item.MA_KHOA}>
+                                                {item.TEN_KHOA}
+                                            </option>
+                                        </>
+                                    ))}
                             </Form.Select>
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>
                                 <strong>Tên chuyên ngành</strong>
                             </Form.Label>
-                            <Form.Control type="text" value={editMajor.TEN_CN} autoFocus />
+                            <Form.Control
+                                type="text"
+                                name="TEN_CN"
+                                value={editMajor.TEN_CN}
+                                onChange={(e) => setEditMajor({ ...editMajor, [e.target.name]: e.target.value })}
+                                autoFocus
+                            />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
@@ -191,7 +284,7 @@ const ChuyenNganh = () => {
                     <Button variant="secondary" onClick={handleCloseSuaLai}>
                         Hủy
                     </Button>
-                    <Button variant="primary" onClick={handleCloseSuaLai}>
+                    <Button variant="primary" onClick={()=>updateChuyenNganh(editMajor.MA_CN)}>
                         Lưu lại
                     </Button>
                 </Modal.Footer>
@@ -210,7 +303,7 @@ const ChuyenNganh = () => {
                     <strong>Lưu ý:</strong> Nếu xóa thông tin chuyên nghành này sẽ mất vĩnh viễn
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="danger" onClick={()=>deleteChuyenNganh(deleteMajor.MA_CN)}>
+                    <Button variant="danger" onClick={() => deleteChuyenNganh(deleteMajor.MA_CN)}>
                         Chắc chắn
                     </Button>
                     <Button variant="secondary" onClick={handleCloseXoa}>

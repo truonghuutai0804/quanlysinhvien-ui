@@ -23,6 +23,13 @@ import BangDieuKhienGV from '~/pages/teacher/BangDieuKhien'
 import ThongTinCaNhanGV from '~/pages/teacher/ThongTinCaNhan'
 import DiemSinhVienGV from '~/pages/teacher/DiemSinhVien'
 
+import BangDieuKhienPDT from '~/pages/trainer/BangDieuKhien'
+import ThongTinCaNhanPDT from '~/pages/trainer/ThongTinCaNhan'
+import DanhSachSinhVienPDT from '~/pages/trainer/DanhSachSinhVien'
+import DanhSachGiaoVienPDT from '~/pages/trainer/DanhSachGiaoVien'
+import QuanLiHocPhanPDT from '~/pages/trainer/QuanLiHocPhan'
+
+
 import DangNhap from '~/pages/DangNhap'
 
 // Truy cập trang sau khi đăng nhập
@@ -43,17 +50,16 @@ const privateRoutes = [
 const teacherRoutes = [
     { path: '/Teacher/', component: BangDieuKhienGV },
     { path: '/Teacher/ThongTinCaNhan', component: ThongTinCaNhanGV },
-    { path: '/Teacher/ThemHocPhan', component: DiemSinhVienGV },
     { path: '/Teacher/DiemSinhVien', component: DiemSinhVienGV },
     { path: '/DangNhap', component: DangNhap, layout: LoginLayout },
 ]
 
 const trainerRoutes = [
-    { path: '/Trainer/', component: BangDieuKhien },
-    { path: '/Trainer/ThongTinCaNhan', component: ThongTinSinhVien },
-    { path: '/Trainer/DanhSachSinhVien', component: PhongDaoTao },
-    { path: '/Trainer/DanhSachGiaoVien', component: GiaoVien },
-    { path: '/Trainer/TaiKhoan', component: TaiKhoan },
+    { path: '/Trainer/', component: BangDieuKhienPDT },
+    { path: '/Trainer/ThongTinCaNhan', component: ThongTinCaNhanPDT },
+    { path: '/Trainer/DanhSachSinhVien', component: DanhSachSinhVienPDT },
+    { path: '/Trainer/DanhSachGiaoVien', component: DanhSachGiaoVienPDT },
+    { path: '/Trainer/HocPhan', component: QuanLiHocPhanPDT },
     { path: '/DangNhap', component: DangNhap, layout: LoginLayout },
 ]
 

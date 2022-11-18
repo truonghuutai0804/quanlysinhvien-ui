@@ -64,17 +64,17 @@ const BangDieuKhien = () => {
                         </strong>
                     </aside>
                 </Col>
-                <Col className="bangdieukhien_diemtrungbinh">
+                {/* <Col className="bangdieukhien_diemtrungbinh">
                     <FaRegChartBar size={80} />
                     <aside className="bangdieukhien_text">
                         <strong>
                             {Array.isArray(dashboard.dataDiem) &&
-                                <p>{(dashboard.dataDiem[0].TONG).toFixed(2)}</p>
+                                <p>{(dashboard.dataDiem[0].TONG)}</p>
                             }
                             ĐIỂM TRUNG BÌNH
                         </strong>
                     </aside>
-                </Col>
+                </Col> */}
             </Row>
         </>
     )

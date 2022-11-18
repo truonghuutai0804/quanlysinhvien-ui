@@ -11,10 +11,27 @@ function App() {
         return false
     }
 
-    const checkLevel = () =>{
-        if( level === '04' || level === null) return true
-        return false 
+    const checkLevel = () => {
+        if (level === '04' || level === null) return true
+        return false
     }
+
+    if (window.location.pathname === '/') {
+        switch (level) {
+            case '01':
+                window.location.pathname = '/Admin'
+                break
+            case '02':
+                window.location.pathname = '/Teacher'
+                break
+            case '03':
+                window.location.pathname = '/Trainer'
+                break
+            default:
+                break
+        }
+    }
+
     return (
         <Router>
             <div className="App">
@@ -39,8 +56,7 @@ function App() {
                                     }
                                 />
                             )
-                        })
-                    }
+                        })}
                     {level === '02' &&
                         teacherRoutes.map((route, idx) => {
                             var Layout = route.layout || TeacherLayout
@@ -61,8 +77,7 @@ function App() {
                                     }
                                 />
                             )
-                        })
-                    }
+                        })}
                     {level === '03' &&
                         trainerRoutes.map((route, idx) => {
                             var Layout = route.layout || TrainerLayout
@@ -83,8 +98,7 @@ function App() {
                                     }
                                 />
                             )
-                        })
-                    }
+                        })}
                     {checkLevel() &&
                         studentRoutes.map((route, idx) => {
                             var Layout = route.layout || StudentLayout
@@ -105,9 +119,7 @@ function App() {
                                     }
                                 />
                             )
-                        })
-                    }
-
+                        })}
                 </Routes>
             </div>
         </Router>

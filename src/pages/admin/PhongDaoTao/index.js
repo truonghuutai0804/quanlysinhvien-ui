@@ -3,15 +3,16 @@ import { Button, Col, Container, Form, Modal, Row, Table } from 'react-bootstrap
 import { MdAddBox, MdOutlineUploadFile } from 'react-icons/md'
 import { FaTrashAlt, FaEdit, FaEye } from 'react-icons/fa'
 import imageNguoiDung from '~/asset/images/icon_user.png'
-import { BiImageAdd } from 'react-icons/bi'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 
 function PhongDaoTao() {
     const [trainer, setTrainer] = useState([])
+    const [addTrainer, setAddTrainer] = useState([])
     const [deleteTrainer, setDeleteTrainer] = useState([])
     const [editTrainer, setEditTrainer] = useState([])
     const [seeTrainer, setSeeTrainer] = useState([])
+    const [infoProvince, setInfoProvince] = useState([])
 
     const [showThemMoi, setShowThemMoi] = useState(false)
     const [showXemThongTin, setShowXemThongTin] = useState(false)
@@ -19,6 +20,7 @@ function PhongDaoTao() {
     const [showXoa, setShowXoa] = useState(false)
 
     const handleShowThemMoi = () => setShowThemMoi(true)
+
     const handleShowXemThongTin = (info) => {
         setSeeTrainer(info)
         setShowXemThongTin(true)
@@ -37,6 +39,22 @@ function PhongDaoTao() {
     const handleCloseSuaLai = () => setShowSuaLai(false)
     const handleCloseXoa = () => setShowXoa(false)
 
+    const getTinh = useCallback(async () => {
+        try {
+            const options = {
+                method: 'get',
+                url: 'http://localhost:8080/api/province',
+            }
+            const response = await axios(options)
+            const provinces = response.data.data
+            if (response.data.status === 400) {
+                setInfoProvince(provinces)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }, [])
+
     const getPhongDaoTao = useCallback(async () => {
         try {
             const options = {
@@ -52,6 +70,42 @@ function PhongDaoTao() {
             console.log(error)
         }
     }, [])
+
+    const createPhongDaoTao = async () => {
+        try {
+            const options = {
+                method: 'post',
+                url: `http://localhost:8080/api/trainer/`,
+                data: addTrainer,
+            }
+            const response = await axios(options)
+            if (response.data.message === 'SUCCESS') {
+                handleCloseThemMoi()
+                Swal.fire('Thành công', 'Thêm phòng đào tạo thành công ', 'success')
+                getPhongDaoTao()
+            }
+        } catch (error) {
+            Swal.fire('Thất bại', `Lỗi ${error}`, 'error')
+        }
+    }
+
+    const updatePhongDaoTao = async (id) => {
+        try {
+            const options = {
+                method: 'put',
+                url: `http://localhost:8080/api/trainteacher/${id}`,
+                data: editTrainer,
+            }
+            const response = await axios(options)
+            if (response.data.message === 'SUCCESS') {
+                handleCloseSuaLai()
+                Swal.fire('Thành công', 'Sửa thông tin phòng đào tạo thành công ', 'success')
+                getPhongDaoTao()
+            }
+        } catch (error) {
+            Swal.fire('Thất bại', `Lỗi ${error}`, 'error')
+        }
+    }
 
     const deletePhongDaoTao = async (id) => {
         try {
@@ -72,7 +126,8 @@ function PhongDaoTao() {
 
     useEffect(() => {
         getPhongDaoTao()
-    }, [getPhongDaoTao])
+        getTinh()
+    }, [getPhongDaoTao, getTinh])
 
     return (
         <>
@@ -81,9 +136,6 @@ function PhongDaoTao() {
                 <aside className="d-flex justify-content-between m-3">
                     <Button variant="outline-primary" onClick={handleShowThemMoi}>
                         <MdAddBox /> Thêm nhân viên mới
-                    </Button>
-                    <Button variant="outline-success">
-                        <MdOutlineUploadFile /> Upload
                     </Button>
                 </aside>
                 <Table bordered hover>
@@ -134,76 +186,105 @@ function PhongDaoTao() {
                 </Modal.Header>
                 <Modal.Body className="show-grid">
                     <Container>
-                        <Row>
-                            <Col xs={6} md={4}>
-                                <img
-                                    src={imageNguoiDung}
-                                    className="hinhanh_sinhvien"
-                                    alt="Hình ảnh người dùng mặc nhiên"
-                                />
-                                <Form.Label htmlFor="getFile" className="btn btn-outline-success btn-block m-1 mt-3">
-                                    <BiImageAdd size={18} /> Thêm ảnh mới
+                        <Form>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Mã số</strong>
                                 </Form.Label>
                                 <Form.Control
-                                    type="file"
-                                    accept="image/png, image/jpeg"
-                                    className="d-none"
-                                    id="getFile"
+                                    type="text"
+                                    name="MA_GV"
+                                    onChange={(e) => setAddTrainer({ ...addTrainer, [e.target.name]: e.target.value })}
+                                    autoFocus
                                 />
-                            </Col>
-                            <Col xs={12} md={8}>
-                                <Form>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>
-                                            <strong>Họ Tên</strong>
-                                        </Form.Label>
-                                        <Form.Control type="text" autoFocus />
-                                    </Form.Group>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>
-                                            <strong>Ngày sinh</strong>
-                                        </Form.Label>
-                                        <Form.Control type="date" />
-                                    </Form.Group>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>
-                                            <strong>Giới tính</strong>
-                                        </Form.Label>
-                                        <Form.Select>
-                                            <option value="1" selected>
-                                                Nam
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Họ và Tên</strong>
+                                </Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="HOTEN_GV"
+                                    onChange={(e) => setAddTrainer({ ...addTrainer, [e.target.name]: e.target.value })}
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Ngày sinh</strong>
+                                </Form.Label>
+                                <Form.Control
+                                    type="date"
+                                    name="NGAYSINH_GV"
+                                    onChange={(e) => setAddTrainer({ ...addTrainer, [e.target.name]: e.target.value })}
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Giới tính</strong>
+                                </Form.Label>
+                                <Form.Select
+                                    name="GIOITINH_GV"
+                                    onChange={(e) => setAddTrainer({ ...addTrainer, [e.target.name]: e.target.value })}
+                                >
+                                    <option value=" ">Chọn giới tính</option>
+                                    <option value="1">Nam</option>
+                                    <option value="0">Nữ</option>
+                                </Form.Select>
+                            </Form.Group>
+                            {/* <Form.Group className="mb-3">
+                            <Form.Label>
+                                <strong>Lớp</strong>
+                            </Form.Label>
+                            <Form.Select
+                                name="MA_LOP"
+                                onChange={(e) =>
+                                    setTrainer({ ...addTrainer, [e.target.name]: e.target.value })
+                                }
+                            >
+                                <option value=" ">Chọn lớp</option>
+                                {infoClass &&
+                                    infoClass.map((item, idx) => (
+                                        <option key={idx} value={item.MA_LOP}>
+                                            {item.TEN_LOP}
+                                        </option>
+                                    ))}
+                            </Form.Select>
+                        </Form.Group> */}
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Số điện thoại</strong>
+                                </Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="SODIENTHOAI_GV"
+                                    onChange={(e) => setAddTrainer({ ...addTrainer, [e.target.name]: e.target.value })}
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Địa chỉ</strong>
+                                </Form.Label>
+                                <Form.Select
+                                    name="MA_TINH"
+                                    onChange={(e) => setAddTrainer({ ...addTrainer, [e.target.name]: e.target.value })}
+                                >
+                                    <option value=" ">Chọn tỉnh thành</option>
+                                    {infoProvince &&
+                                        infoProvince.map((item, idx) => (
+                                            <option key={idx} value={item.MA_TINH}>
+                                                {item.TINH_THANH}
                                             </option>
-                                            <option value="2">Nữ</option>
-                                        </Form.Select>
-                                    </Form.Group>
-                                    {/* <Form.Group className="mb-3">
-                                        <Form.Label>
-                                            <strong>Email</strong>
-                                        </Form.Label>
-                                        <Form.Control type="email" />
-                                    </Form.Group> */}
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>
-                                            <strong>Số điện thoại liên lạc</strong>
-                                        </Form.Label>
-                                        <Form.Control type="text" />
-                                    </Form.Group>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>
-                                            <strong>Địa chỉ liên lạc</strong>
-                                        </Form.Label>
-                                        <Form.Control type="text" />
-                                    </Form.Group>
-                                </Form>
-                            </Col>
-                        </Row>
+                                        ))}
+                                </Form.Select>
+                            </Form.Group>
+                        </Form>
                     </Container>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleCloseThemMoi}>
                         Hủy
                     </Button>
-                    <Button variant="primary" onClick={handleCloseThemMoi}>
+                    <Button variant="primary" onClick={createPhongDaoTao}>
                         Tạo mới
                     </Button>
                 </Modal.Footer>
@@ -237,7 +318,7 @@ function PhongDaoTao() {
                                         <strong>Ngày sinh: </strong> {seeTrainer.NGAYSINH_GV}
                                     </p>
                                     <p>
-                                        <strong>Giới tính: </strong> {seeTrainer.GIOITINH_GV === 1 ?'Nam' : 'Nữ'}
+                                        <strong>Giới tính: </strong> {seeTrainer.GIOITINH_GV === 1 ? 'Nam' : 'Nữ'}
                                     </p>
                                     {/* <p>
                                         <strong>Email: </strong> taib1809509@student.ctu.edu.vn
@@ -268,76 +349,89 @@ function PhongDaoTao() {
                 </Modal.Header>
                 <Modal.Body className="show-grid">
                     <Container>
-                        <Row>
-                            <Col xs={6} md={4}>
-                                <img
-                                    src={imageNguoiDung}
-                                    className="hinhanh_sinhvien"
-                                    alt="Hình ảnh người dùng mặc nhiên"
-                                />
-                                <Form.Label htmlFor="getFile" className="btn btn-outline-success btn-block m-1 mt-3">
-                                    <BiImageAdd size={18} /> Sửa lại ảnh
+                        <Form>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Mã phòng đào tạo</strong>
+                                </Form.Label>
+                                <Form.Control type="text" name="MA_GV" value={editTrainer.MA_GV} disabled />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Họ Tên</strong>
                                 </Form.Label>
                                 <Form.Control
-                                    type="file"
-                                    accept="image/png, image/jpeg"
-                                    className="d-none"
-                                    id="getFile"
+                                    type="text"
+                                    name="HOTEN_GV"
+                                    value={editTrainer.HOTEN_GV}
+                                    onChange={(e) =>
+                                        setEditTrainer({ ...editTrainer, [e.target.name]: e.target.value })
+                                    }
+                                    autoFocus
                                 />
-                            </Col>
-                            <Col xs={12} md={8}>
-                                <Form>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>
-                                            <strong>Mã phòng đào tạo</strong>
-                                        </Form.Label>
-                                        <Form.Control type="text" defaultValue={editTrainer.MA_GV} disabled />
-                                    </Form.Group>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>
-                                            <strong>Họ Tên</strong>
-                                        </Form.Label>
-                                        <Form.Control type="text" defaultValue={editTrainer.HOTEN_GV} autoFocus />
-                                    </Form.Group>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>
-                                            <strong>Ngày sinh</strong>
-                                        </Form.Label>
-                                        <Form.Control type="date" defaultValue={editTrainer.NGAYSINH_GV} />
-                                    </Form.Group>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>
-                                            <strong>Giới tính</strong>
-                                        </Form.Label>
-                                        <Form.Select>
-                                            <option value="1" selected>
-                                                Nam
-                                            </option>
-                                            <option value="2">Nữ</option>
-                                        </Form.Select>
-                                    </Form.Group>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>
-                                            <strong>Số điện thoại liên lạc</strong>
-                                        </Form.Label>
-                                        <Form.Control type="text" defaultValue={editTrainer.SODIENTHOAI_GV} />
-                                    </Form.Group>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>
-                                            <strong>Địa chỉ liên lạc</strong>
-                                        </Form.Label>
-                                        <Form.Control type="text" defaultValue={editTrainer.TINH_THANH} />
-                                    </Form.Group>
-                                </Form>
-                            </Col>
-                        </Row>
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Ngày sinh</strong>
+                                </Form.Label>
+                                <Form.Control
+                                    type="date"
+                                    name="NGAYSINH_GV"
+                                    value={editTrainer.NGAYSINH_GV}
+                                    onChange={(e) =>
+                                        setEditTrainer({ ...editTrainer, [e.target.name]: e.target.value })
+                                    }
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Giới tính</strong>
+                                </Form.Label>
+                                <Form.Select
+                                    value={editTrainer.GIOITINH_GV}
+                                    name="GIOITINH_GV"
+                                    onChange={(e) =>
+                                        setEditTrainer({ ...editTrainer, [e.target.name]: e.target.value })
+                                    }
+                                >
+                                    <option value="1">Nam</option>
+                                    <option value="0">Nữ</option>
+                                </Form.Select>
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Số điện thoại liên lạc</strong>
+                                </Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="SODIENTHOAI_GV"
+                                    value={editTrainer.SODIENTHOAI_GV}
+                                    onChange={(e) =>
+                                        setEditTrainer({ ...editTrainer, [e.target.name]: e.target.value })
+                                    }
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Địa chỉ liên lạc</strong>
+                                </Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="TINH_THANH"
+                                    value={editTrainer.TINH_THANH}
+                                    onChange={(e) =>
+                                        setEditTrainer({ ...editTrainer, [e.target.name]: e.target.value })
+                                    }
+                                />
+                            </Form.Group>
+                        </Form>
                     </Container>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleCloseSuaLai}>
                         Hủy
                     </Button>
-                    <Button variant="primary" onClick={handleCloseSuaLai}>
+                    <Button variant="primary" onClick={() => updatePhongDaoTao(editTrainer.MA_GV)}>
                         Lưu lại
                     </Button>
                 </Modal.Footer>

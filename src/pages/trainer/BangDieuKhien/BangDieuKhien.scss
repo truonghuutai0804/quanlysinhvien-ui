@@ -1,6 +1,6 @@
 .wrap-bangdieukhien{
     border: 1px solid;
-    height: 500px;
+    min-height: 650px;
     margin-top: 10px;
     border-radius: 20px;
 }
@@ -29,12 +29,17 @@
 
 .body-bangdieukhien {
     border: 1px solid;
-    height: 480px;
+    height: auto !important;
     border-radius: 20px;
+    padding: 10px;
     .items-bangdieukhien{
         margin-top: 10px !important;
         width: 10.5rem;
         margin: auto;
         text-align: center;
+        width: 220px;
+    }
+    .items-bangdieukhien:hover{
+        border: 5px solid blue;
     }
 }

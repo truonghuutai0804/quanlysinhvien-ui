@@ -6,13 +6,13 @@ import './DangNhap.scss'
 
 const DangNhap = () => {
     const [accountInput, setAccountInput] = useState({})
+    const [error, setError] = useState([])
     const navigate = useNavigate()
     localStorage.removeItem('login')
     localStorage.removeItem('level')
     const loginAccount = async (e) => {
         try {
             e.preventDefault()
-            // console.log(accountInput)
             const options = {
                 method: 'post',
                 url: 'http://localhost:8080/api/login',
@@ -35,27 +35,30 @@ const DangNhap = () => {
                 localStorage.setItem('level', level)
                 switch (level) {
                     case '01':
-                         navigate('/Admin/')
-                         break;
+                         //navigate('/Admin')
+                        window.location.pathname='/Admin'
+                        break;
                     case '02':
-                        navigate('/Teacher')
-                         break;
+                        //navigate('/Teacher')
+                        window.location.pathname='/Teacher'
+                        break;
                     case '03':
-                        navigate('/Trainer')
+                        //navigate('/Trainer')
+                        window.location.pathname='/Trainer'
                         break;
                     default:
-                         navigate('/')
-                         break;
+                        navigate('/')
+                        break;
                 }
             }
             else if (message === 'FAIL'){
-                console.log('Đăng nhập thất bại, do sai mật khẩu hoặc tài khoản');
+                setError('Đăng nhập thất bại, do sai mật khẩu hoặc tài khoản');
             }
             else if (message === 'ERR'){
-                console.log('Đăng nhập thất bại, vui lòng không bỏ trống tài khoản và mật khẩu');
+                setError('Đăng nhập thất bại, vui lòng không bỏ trống tài khoản và mật khẩu');
             }
             else {
-                console.log(message);
+                setError(message);
             }
         } catch (error) {
             console.log(error)
@@ -87,6 +90,7 @@ const DangNhap = () => {
                             required
                         />
                     </Form.Group>
+                    <small>{error}</small>
                     <Button variant="success" type="submit" className="submit-login" onClick={loginAccount}>
                         <strong>Đăng nhập</strong>
                     </Button>

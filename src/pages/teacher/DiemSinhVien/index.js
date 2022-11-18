@@ -5,12 +5,10 @@ import axios from 'axios'
 import Swal from 'sweetalert2'
 
 function KetQuaHocTap() {
-    const [year, setYear] = useState([])
-    const [semester, setSemester] = useState([])
     const [subject, setSubject] = useState([])
     const [input, setInput] = useState([])
     const [edit, setEdit] = useState([])
-    const [editDiem, setEditDiem] = useState([])
+    const [resultBlockchain, setResultBlockchain] = useState([])
     const [result, setResult] = useState([])
     const MA_GV = localStorage.getItem('login')
 
@@ -38,65 +36,49 @@ function KetQuaHocTap() {
         }
     }, [])
 
-    const getNamHoc = useCallback(async () => {
+    const getDiemSVBlockchain = async () => {
         try {
             const options = {
                 method: 'get',
-                url: 'http://localhost:8080/api/year',
+                url: `http://localhost:8080/api/scoreGV/Blockchain/${input.MA_NHP}`,
             }
             const response = await axios(options)
-            const years = response.data.data
+            const results = response.data.data
             if (response.data.message === 'SUCCESS') {
-                setYear(years)
+                setResultBlockchain(results)
             }
         } catch (error) {
             console.log(error)
         }
-    }, [])
-
-    const getHocKi = useCallback(async () => {
-        try {
-            const options = {
-                method: 'get',
-                url: 'http://localhost:8080/api/semester',
-            }
-            const response = await axios(options)
-            const semesters = response.data.data
-            if (response.data.message === 'SUCCESS') {
-                setSemester(semesters)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }, [])
+    }
 
     const getDiemSV = async (id) => {
         try {
             const options = {
                 method: 'get',
-                url: `http://localhost:8080/api/scoreGV/${id}?MA_NH=${input.MA_NH}&MA_HK=${input.MA_HK}&MA_NHP=${input.MA_NHP}`,
+                url: `http://localhost:8080/api/scoreGV/${id}?MA_NHP=${input.MA_NHP}`,
             }
             const response = await axios(options)
             const results = response.data.dataDiem
             if (response.data.message === 'SUCCESS') {
                 setResult(results)
             }
-            console.log(results)
         } catch (error) {
             console.log(error)
         }
     }
 
-    const editDiemSV = async (id, maSV) => {
+    const setDiemSVBlockchain = async (id, maSV) => {
         try {
             const options = {
-                method: 'put',
-                url: `http://localhost:8080/api/score/${id}?MA_SV=${maSV}`,
-                data: editDiem,
+                method: 'post',
+                url: `http://localhost:8080/api/scoreGV/${id}?MA_SV=${maSV}`,
+                data: edit,
             }
             const response = await axios(options)
             if (response.data.message === 'SUCCESS') {
                 handleClose()
+                getDiemSVBlockchain()
                 getDiemSV(MA_GV)
                 Toast.fire({
                     icon: 'success',
@@ -110,9 +92,7 @@ function KetQuaHocTap() {
 
     useEffect(() => {
         getMonHoc(MA_GV)
-        getNamHoc()
-        getHocKi()
-    }, [getNamHoc, getHocKi, getMonHoc, MA_GV])
+    }, [getMonHoc, MA_GV])
 
     const Toast = Swal.mixin({
         toast: true,
@@ -133,46 +113,6 @@ function KetQuaHocTap() {
                 <Form className="form-ketquahoctap">
                     <Form.Group className="mb-3 d-flex">
                         <Form.Label>
-                            <b>Năm học: </b>
-                        </Form.Label>
-                        <Form.Select
-                            size="sm"
-                            className="namhoc-ketquahoctap"
-                            name="MA_NH"
-                            onChange={(e) => setInput({ ...input, [e.target.name]: e.target.value })}
-                        >
-                            {year &&
-                                year.map((item, idx) => (
-                                    <>
-                                        <option key={idx} value={item.MA_NH}>
-                                            {item.NAM_HOC}
-                                        </option>
-                                    </>
-                                ))}
-                        </Form.Select>
-                    </Form.Group>
-                    <Form.Group className="mb-3 d-flex">
-                        <Form.Label>
-                            <b>Học kì: </b>
-                        </Form.Label>
-                        <Form.Select
-                            size="sm"
-                            className="namhoc-ketquahoctap"
-                            name="MA_HK"
-                            onChange={(e) => setInput({ ...input, [e.target.name]: e.target.value })}
-                        >
-                            {semester &&
-                                semester.map((item, idx) => (
-                                    <>
-                                        <option key={idx} value={item.MA_HK}>
-                                            {item.HOC_KY}
-                                        </option>
-                                    </>
-                                ))}
-                        </Form.Select>
-                    </Form.Group>
-                    <Form.Group className="mb-3 d-flex">
-                        <Form.Label>
                             <b>Học phần: </b>
                         </Form.Label>
                         <Form.Select
@@ -181,24 +121,32 @@ function KetQuaHocTap() {
                             name="MA_NHP"
                             onChange={(e) => setInput({ ...input, [e.target.name]: e.target.value })}
                         >
+                            <option value="">Chọn nhóm học phần</option>
+
                             {subject &&
                                 subject.map((item, idx) => (
                                     <>
                                         <option key={idx} value={item.MA_NHP}>
-                                            {item.TEN_MH} {item.MA_NHP.slice(-2)}
+                                            {item.TEN_MH} {item.MA_NHP}
                                         </option>
                                     </>
                                 ))}
                         </Form.Select>
                     </Form.Group>
-                    <Button className="ms-3 button-ketquahoctap" size="sm" onClick={() => getDiemSV(MA_GV)}>
+                    <Button
+                        className="ms-3 button-ketquahoctap"
+                        size="sm"
+                        onClick={() => {
+                            getDiemSVBlockchain()
+                            getDiemSV(MA_GV)
+                        }}
+                    >
                         Liệt kê
                     </Button>
                 </Form>
                 <Table bordered hover>
                     <thead>
                         <tr>
-                            <th>#</th>
                             <th>Mã sinh viên</th>
                             <th>Họ tên sinh viên</th>
                             <th>Điểm số</th>
@@ -206,22 +154,31 @@ function KetQuaHocTap() {
                         </tr>
                     </thead>
                     <tbody>
+                        {resultBlockchain &&
+                            resultBlockchain.map((item, idx) =>
+                                item[2] !== '' ? (
+                                    <tr key={idx}>
+                                        <td className="ketquahoctap-text">{item[2]}</td>
+                                        <td>{item[3]}</td>
+                                        <td className="ketquahoctap-text">{item[7]}</td>
+                                        <td className="ketquahoctap-text">ĐÃ THÊM</td>
+                                    </tr>
+                                ) : null,
+                            )}
+
                         {result &&
-                            result.map((item, idx) => (
-                                <tr key={idx}>
-                                    <td className="ketquahoctap-text">{idx + 1}</td>
-                                    <td className="ketquahoctap-text">{item.MA_SV}</td>
-                                    <td>{item.HOTEN_SV}</td>
-                                    <td className="ketquahoctap-text">{item.DIEM_SO}</td>
-                                    <td className="ketquahoctap-text">
-                                        {item.DIEM_SO === '' ? (
+                            result.map((item, idx) =>
+                                item.THEM_DIEM !== 1 ? (
+                                    <tr key={idx}>
+                                        <td className="ketquahoctap-text">{item.MA_SV}</td>
+                                        <td>{item.HOTEN_SV}</td>
+                                        <td className="ketquahoctap-text">{item.DIEM_SO}</td>
+                                        <td className="ketquahoctap-text">
                                             <Button onClick={() => handleShow(item)}>Thêm</Button>
-                                        ) : (
-                                            'ĐÃ THÊM'
-                                        )}
-                                    </td>
-                                </tr>
-                            ))}
+                                        </td>
+                                    </tr>
+                                ) : null,
+                            )}
                     </tbody>
                 </Table>
             </Container>
@@ -238,7 +195,7 @@ function KetQuaHocTap() {
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>Họ tên sinh viên</Form.Label>
-                            <Form.Control type="text" value={edit.HOTEN_SV} disabled />
+                            <Form.Control type="text" name="HOTEN_SV" value={edit.HOTEN_SV} disabled />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>Điểm số</Form.Label>
@@ -246,7 +203,9 @@ function KetQuaHocTap() {
                                 type="text"
                                 name="DIEM_SO"
                                 defaultValue={edit.DIEM_SO}
-                                onChange={(e) => setEditDiem({ ...editDiem, [e.target.name]: e.target.value })}
+                                onChange={(e) => {
+                                    setEdit({ ...edit, [e.target.name]: e.target.value })
+                                }}
                             />
                         </Form.Group>
                     </Form>
@@ -255,7 +214,7 @@ function KetQuaHocTap() {
                     <Button variant="secondary" onClick={handleClose}>
                         Hủy
                     </Button>
-                    <Button variant="primary" onClick={() => editDiemSV(edit.MA_NHP, edit.MA_SV)}>
+                    <Button variant="primary" onClick={() => setDiemSVBlockchain(edit.MA_NHP, edit.MA_SV)}>
                         Lưu
                     </Button>
                 </Modal.Footer>
