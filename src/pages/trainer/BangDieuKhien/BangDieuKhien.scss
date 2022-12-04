@@ -27,17 +27,18 @@
 }
 
 
-.body-bangdieukhien {
+
+.body-bangdieukhien-pdt {
     border: 1px solid;
-    height: auto !important;
     border-radius: 20px;
     padding: 10px;
+    height: auto;
     .items-bangdieukhien{
         margin-top: 10px !important;
-        width: 10.5rem;
+        height: 162px !important;
+        width: 8rem !important;
         margin: auto;
         text-align: center;
-        width: 220px;
     }
     .items-bangdieukhien:hover{
         border: 5px solid blue;

@@ -5,6 +5,7 @@ import imageDangKiHocPhan from '~/asset/images/hetinchi.gif'
 import imageKetQuaHocTap from '~/asset/images/ql_diem.gif'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import moment from 'moment'
 
 
 
@@ -49,7 +50,7 @@ const BangDieuKhien = () => {
                                 </tr>
                                 <tr>
                                     <th>Ngày sinh:</th>
-                                    <td>{student.NGAYSINH_SV}</td>
+                                    <td>{moment(student.NGAYSINH_SV).format("DD/MM/YYYY")}</td>
                                 </tr>
                                 <tr>
                                     <th>Giới tính:</th>
@@ -65,7 +66,7 @@ const BangDieuKhien = () => {
                                 <Card className="items-bangdieukhien">
                                     <Card.Link as={Link} to='/DangKiHocPhan'>
                                         <Card.Img variant="top" src={imageDangKiHocPhan} />
-                                        <Card.Title>Đăng kí học phần</Card.Title>
+                                        <Card.Title className='mt-3'>ĐĂNG KÝ HỌC PHẦN</Card.Title>
                                     </Card.Link>
                                 </Card>
                             </Col>
@@ -73,7 +74,7 @@ const BangDieuKhien = () => {
                                 <Card className="items-bangdieukhien">
                                     <Card.Link as={Link} to="/KetQua">
                                         <Card.Img variant="top" src={imageKetQuaHocTap} />
-                                        <Card.Title>Kết quả học tập</Card.Title>
+                                        <Card.Title>KẾT QUẢ HỌC TẬP</Card.Title>
                                     </Card.Link>
                                 </Card>
                             </Col>

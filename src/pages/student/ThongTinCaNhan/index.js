@@ -2,6 +2,9 @@ import React, { useCallback, useEffect, useState } from 'react'
 import axios from 'axios'
 import { Container, Table } from 'react-bootstrap'
 import './ThongTinCaNhan.scss'
+import { Link } from 'react-router-dom'
+import moment from 'moment'
+import { GiReturnArrow } from 'react-icons/gi'
 
 function ThongTinCaNhan() {
     const [student, setStudent] = useState([])
@@ -29,6 +32,9 @@ function ThongTinCaNhan() {
     return (
         <>
             <Container className="wrap-thongtincanhan">
+                <Link to="/" className="btn btn-outline-primary m-3">
+                    <GiReturnArrow /> Quay Lại
+                </Link>
                 <h2>THÔNG TIN SINH VIÊN</h2>
                 <Table hover>
                     <tbody>
@@ -42,7 +48,7 @@ function ThongTinCaNhan() {
                         </tr>
                         <tr>
                             <th>Ngày sinh:</th>
-                            <td>{student.NGAYSINH_SV}</td>
+                            <td>{moment(student.NGAYSINH_SV).format('DD/MM/YYYY')}</td>
                         </tr>
                         <tr>
                             <th>Giới tính:</th>

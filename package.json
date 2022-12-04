@@ -7,6 +7,7 @@
         "@testing-library/react": "^13.3.0",
         "@testing-library/user-event": "^13.5.0",
         "axios": "^0.27.2",
+        "moment": "^2.29.4",
         "normalize.css": "^8.0.1",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
@@ -14,7 +15,8 @@
         "react-router-dom": "^6.3.0",
         "react-scripts": "5.0.1",
         "sweetalert2": "^11.5.1",
-        "web-vitals": "^2.1.4"
+        "web-vitals": "^2.1.4",
+        "xlsx": "^0.18.5"
     },
     "devDependencies": {
         "babel-plugin-module-resolver": "^4.1.0",

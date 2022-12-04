@@ -1,14 +1,19 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Button, Container, Form, Modal, Table } from 'react-bootstrap'
+import { Button, Container, Dropdown, Form, Modal, Table } from 'react-bootstrap'
 import './DiemSinhVien.scss'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import * as XLSX from 'xlsx'
+import { Link } from 'react-router-dom'
+import { GiReturnArrow } from 'react-icons/gi'
 
 function KetQuaHocTap() {
     const [subject, setSubject] = useState([])
     const [input, setInput] = useState([])
     const [edit, setEdit] = useState([])
-    const [resultBlockchain, setResultBlockchain] = useState([])
+    const [selectedFile, setSelectedFile] = useState([])
+    const [fileName, setFileName] = useState([])
+    const [fileExcel, setFileExcel] = useState([])
     const [result, setResult] = useState([])
     const MA_GV = localStorage.getItem('login')
 
@@ -36,22 +41,6 @@ function KetQuaHocTap() {
         }
     }, [])
 
-    const getDiemSVBlockchain = async () => {
-        try {
-            const options = {
-                method: 'get',
-                url: `http://localhost:8080/api/scoreGV/Blockchain/${input.MA_NHP}`,
-            }
-            const response = await axios(options)
-            const results = response.data.data
-            if (response.data.message === 'SUCCESS') {
-                setResultBlockchain(results)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
     const getDiemSV = async (id) => {
         try {
             const options = {
@@ -78,14 +67,31 @@ function KetQuaHocTap() {
             const response = await axios(options)
             if (response.data.message === 'SUCCESS') {
                 handleClose()
-                getDiemSVBlockchain()
-                getDiemSV(MA_GV)
                 Toast.fire({
                     icon: 'success',
                     title: 'Thêm điểm thành công',
                 })
+                getDiemSV(MA_GV)
+            } else if (response.data.err) {
+                handleClose()
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Thất bại!',
+                })
+                console.log(response.data.err)
+            } else {
+                handleClose()
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Thất bại!',
+                })
             }
         } catch (error) {
+            handleClose()
+            Toast.fire({
+                icon: 'error',
+                title: 'Thất bại!',
+            })
             console.log(error)
         }
     }
@@ -106,9 +112,84 @@ function KetQuaHocTap() {
         },
     })
 
+    const ImportExcel = (e) => {
+        try {
+            setSelectedFile(e.target.files[0])
+            if (e.target.files[0] !== undefined) {
+                let filename = e.target.files[0].name
+                setFileName(filename)
+                if (typeof FileReader !== 'undefined') {
+                    const reader = new FileReader()
+                    if (reader.readAsBinaryString) {
+                        reader.onload = (e) => {
+                            processExcel(reader.result)
+                        }
+                        reader.readAsBinaryString(e.target.files[0])
+                    }
+                } else {
+                    console.log('Trình duyệt không hỗ trợ HTML5.')
+                }
+            } else {
+                console.log('Không đọc được file. Vui lòng thử lại!')
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const processExcel = (data) => {
+        const workbook = XLSX.read(data, {
+            type: 'binary',
+        })
+        const firstSheet = workbook.SheetNames[0]
+
+        const excelRows = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheet], {
+            range: 16,
+        })
+
+        if (typeof excelRows === 'object') {
+            setFileExcel(excelRows)
+        }
+    }
+
+    console.log(fileExcel)
+
     return (
         <>
             <Container className="wrap-ketquahoctap">
+                <aside className="d-flex m-3">
+                    <Link to="/Teacher" className="btn btn-outline-primary me-3">
+                        <GiReturnArrow /> Quay Lại
+                    </Link>
+                    <Dropdown>
+                        <Dropdown.Toggle id="dropdown-basic" className="primary me-3">
+                            Import/Export Điểm
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            <label htmlFor="getFile" className="dropdown-item">
+                                Import điểm từ Excel
+                            </label>
+                            <input
+                                type="file"
+                                accept=".xlsx, .xls"
+                                className="d-none"
+                                id="getFile"
+                                onChange={ImportExcel}
+                            />
+                            <Dropdown.Item href="#/action-2">Export thành file Excel</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    <Dropdown>
+                        <Dropdown.Toggle id="dropdown-basic" className="primary me-3">
+                            Thống kê điểm
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                            <Dropdown.Item href="#/action-1">In DSSV theo HP</Dropdown.Item>
+                            <Dropdown.Item href="#/action-2">In Điểm theo HP</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </aside>
                 <h2>DANH SÁCH ĐIỂM SINH VIÊN</h2>
                 <Form className="form-ketquahoctap">
                     <Form.Group className="mb-3 d-flex">
@@ -137,7 +218,6 @@ function KetQuaHocTap() {
                         className="ms-3 button-ketquahoctap"
                         size="sm"
                         onClick={() => {
-                            getDiemSVBlockchain()
                             getDiemSV(MA_GV)
                         }}
                     >
@@ -147,38 +227,39 @@ function KetQuaHocTap() {
                 <Table bordered hover>
                     <thead>
                         <tr>
+                            <th>#</th>
                             <th>Mã sinh viên</th>
                             <th>Họ tên sinh viên</th>
                             <th>Điểm số</th>
+                            <th>Điểm chữ</th>
                             <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {resultBlockchain &&
-                            resultBlockchain.map((item, idx) =>
-                                item[2] !== '' ? (
-                                    <tr key={idx}>
-                                        <td className="ketquahoctap-text">{item[2]}</td>
-                                        <td>{item[3]}</td>
-                                        <td className="ketquahoctap-text">{item[7]}</td>
-                                        <td className="ketquahoctap-text">ĐÃ THÊM</td>
-                                    </tr>
-                                ) : null,
-                            )}
-
-                        {result &&
-                            result.map((item, idx) =>
-                                item.THEM_DIEM !== 1 ? (
-                                    <tr key={idx}>
-                                        <td className="ketquahoctap-text">{item.MA_SV}</td>
-                                        <td>{item.HOTEN_SV}</td>
-                                        <td className="ketquahoctap-text">{item.DIEM_SO}</td>
-                                        <td className="ketquahoctap-text">
+                        {result.length > 0 ? (
+                            result.map((item, idx) => (
+                                <tr key={idx}>
+                                    <td className="ketquahoctap-text">{idx + 1}</td>
+                                    <td className="ketquahoctap-text">{item.MA_SV}</td>
+                                    <td>{item.HOTEN_SV}</td>
+                                    <td className="ketquahoctap-text">{item.DIEM_SO}</td>
+                                    <td className="ketquahoctap-text">{item.DIEM_CHU}</td>
+                                    <td className="ketquahoctap-text">
+                                        {item.DIEM_SO ? (
+                                            'ĐÃ THÊM'
+                                        ) : (
                                             <Button onClick={() => handleShow(item)}>Thêm</Button>
-                                        </td>
-                                    </tr>
-                                ) : null,
-                            )}
+                                        )}
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="6" className="text-center">
+                                    Hiện tại vẫn chưa có dữ liệu
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </Table>
             </Container>
@@ -202,7 +283,6 @@ function KetQuaHocTap() {
                             <Form.Control
                                 type="text"
                                 name="DIEM_SO"
-                                defaultValue={edit.DIEM_SO}
                                 onChange={(e) => {
                                     setEdit({ ...edit, [e.target.name]: e.target.value })
                                 }}

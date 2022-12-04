@@ -19,7 +19,9 @@ function DiemSinhVien() {
         setShow(true)
     }
 
-    const handleEditDiemClose = () =>{ setShowEditDiem(false)}
+    const handleEditDiemClose = () => {
+        setShowEditDiem(false)
+    }
     const handleClose = () => setShow(false)
 
     const [score, setScore] = useState([])
@@ -63,19 +65,29 @@ function DiemSinhVien() {
             const options = {
                 method: 'put',
                 url: `http://localhost:8080/api/scoreAD/${id}`,
-                data: infoEditDiem
+                data: infoEditDiem,
             }
             const response = await axios(options)
             if (response.data.message === 'SUCCESS') {
                 handleEditDiemClose()
-                getInfoDiemSinhVien(id)
-                getDiemSinhVienBlockchain()
                 Toast.fire({
                     icon: 'success',
                     title: 'Sửa điểm thành công',
                 })
+                getInfoDiemSinhVien(id)
+                getDiemSinhVienBlockchain()
+            } else {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Thất bại',
+                })
+                console.log(response.data.err)
             }
         } catch (error) {
+            Toast.fire({
+                icon: 'error',
+                title: 'Thất bại',
+            })
             console.log(error)
         }
     }
@@ -157,7 +169,9 @@ function DiemSinhVien() {
                                     <td>{item.HOTEN_SV}</td>
                                     <td>{item.MA_SV}</td>
                                     <td className="table-text-center">{item.TIN_CHI}</td>
-                                    <td className="table-text-center">{isNaN(item.DIEM_SO.toFixed(2)) ? 0 : item.DIEM_SO.toFixed(2)}</td>
+                                    <td className="table-text-center">
+                                        {isNaN(item.DIEM_SO.toFixed(2)) ? 0 : item.DIEM_SO.toFixed(2)}
+                                    </td>
                                     <td className="table-text-center">
                                         <strong
                                             onClick={() => {
@@ -244,7 +258,7 @@ function DiemSinhVien() {
                     <Button variant="secondary" onClick={handleEditDiemClose}>
                         <MdOutlineClose /> Hủy
                     </Button>
-                    <Button variant="primary" onClick={()=>editDiemSinhVienBlockchain(infoEditDiem[2])}>
+                    <Button variant="primary" onClick={() => editDiemSinhVienBlockchain(infoEditDiem[2])}>
                         <MdSave /> Lưu lại
                     </Button>
                 </Modal.Footer>

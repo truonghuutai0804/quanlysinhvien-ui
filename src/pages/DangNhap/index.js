@@ -1,13 +1,11 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
-import { useNavigate } from 'react-router-dom'
 import './DangNhap.scss'
 
 const DangNhap = () => {
     const [accountInput, setAccountInput] = useState({})
     const [error, setError] = useState([])
-    const navigate = useNavigate()
     localStorage.removeItem('login')
     localStorage.removeItem('level')
     const loginAccount = async (e) => {
@@ -35,19 +33,16 @@ const DangNhap = () => {
                 localStorage.setItem('level', level)
                 switch (level) {
                     case '01':
-                         //navigate('/Admin')
                         window.location.pathname='/Admin'
                         break;
                     case '02':
-                        //navigate('/Teacher')
                         window.location.pathname='/Teacher'
                         break;
                     case '03':
-                        //navigate('/Trainer')
                         window.location.pathname='/Trainer'
                         break;
                     default:
-                        navigate('/')
+                        window.location.pathname='/'
                         break;
                 }
             }

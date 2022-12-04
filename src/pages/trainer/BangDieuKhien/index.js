@@ -4,9 +4,17 @@ import './BangDieuKhien.scss'
 import imageDangKiHocPhan from '~/asset/images/hocphan.png'
 import imageDanhSachSinhVien from '~/asset/images/student.png'
 import imageDanhSachGiaoVien from '~/asset/images/teacher.png'
+import imageQuanLyDiem from '~/asset/images/ql_diem.gif'
+import imageQuanLyNamHoc from '~/asset/images/nam-hoc.png'
+import imageQuanLyKhoa from '~/asset/images/ql-khoa.png'
+import imageQuanLyChuyenNganh from '~/asset/images/chuyen-nganh.png'
+import imageQuanLyLopHoc from '~/asset/images/lop-hoc.png'
+import imageQuanLyMonHoc from '~/asset/images/mon-hoc.png'
+import imageQuanLyLyDo from '~/asset/images/ly-do.png'
 
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import moment from 'moment'
 
 const BangDieuKhien = () => {
     const [trainer, setTrainer] = useState([])
@@ -52,7 +60,7 @@ const BangDieuKhien = () => {
                                     </tr>
                                     <tr>
                                         <th>Ngày sinh:</th>
-                                        <td>{trainer.NGAYSINH_GV}</td>
+                                        <td>{moment(trainer.NGAYSINH_GV).format('DD/MM/YYYY')}</td>
                                     </tr>
                                     <tr>
                                         <th>Giới tính:</th>
@@ -61,18 +69,18 @@ const BangDieuKhien = () => {
                                 </tbody>
                             )}
                         </Table>
-                        <Link to="/Trainer/ThongTinCaNhan" className='d-grid col-5 mx-auto'>
-                            <p className="btn btn-primary btn-lg" >Xem thêm &gt;&gt;&gt;</p>
+                        <Link to="/Trainer/ThongTinCaNhan" className="d-grid col-5 mx-auto">
+                            <p className="btn btn-primary btn-lg">Xem thêm &gt;&gt;&gt;</p>
                         </Link>
                     </Col>
-                    <Col className="body-bangdieukhien">
+                    <Col className="body-bangdieukhien-pdt">
                         <Row>
                             <Col>
                                 <Card className="items-bangdieukhien">
                                     <Card.Link as={Link} to="/Trainer/DanhSachSinhVien">
                                         <Card.Img variant="top" src={imageDanhSachSinhVien} />
                                         <Card.Title className="mt-3">
-                                            <strong>DANH SÁCH SINH VIÊN</strong>
+                                            <strong>DS SINH VIÊN</strong>
                                         </Card.Title>
                                     </Card.Link>
                                 </Card>
@@ -82,7 +90,27 @@ const BangDieuKhien = () => {
                                     <Card.Link as={Link} to="/Trainer/DanhSachGiaoVien">
                                         <Card.Img variant="top" src={imageDanhSachGiaoVien} />
                                         <Card.Title className="mt-3">
-                                            <strong>DANH SÁCH GIÁO VIÊN</strong>
+                                            <strong>DS GIÁO VIÊN</strong>
+                                        </Card.Title>
+                                    </Card.Link>
+                                </Card>
+                            </Col>
+                            <Col>
+                                <Card className="items-bangdieukhien">
+                                    <Card.Link as={Link} to="/Trainer/HocPhan">
+                                        <Card.Img variant="top" src={imageDangKiHocPhan} />
+                                        <Card.Title className="mt-3">
+                                            <strong>HỌC PHẦN</strong>
+                                        </Card.Title>
+                                    </Card.Link>
+                                </Card>
+                            </Col>
+                            <Col>
+                                <Card className="items-bangdieukhien">
+                                    <Card.Link as={Link} to="/Trainer/HocPhan">
+                                        <Card.Img variant="top" src={imageQuanLyDiem} />
+                                        <Card.Title className="mt-3">
+                                            <strong>ĐIỂM SV</strong>
                                         </Card.Title>
                                     </Card.Link>
                                 </Card>
@@ -92,15 +120,81 @@ const BangDieuKhien = () => {
                             <Col>
                                 <Card className="items-bangdieukhien">
                                     <Card.Link as={Link} to="/Trainer/HocPhan">
-                                        <Card.Img variant="top" src={imageDangKiHocPhan} />
+                                        <Card.Img variant="top" src={imageQuanLyMonHoc} />
                                         <Card.Title className="mt-3">
-                                            <strong>QUẢN LÍ HỌC PHẦN</strong>
+                                            <strong>MÔN HỌC</strong>
+                                        </Card.Title>
+                                    </Card.Link>
+                                </Card>
+                            </Col>
+                            <Col>
+                                <Card className="items-bangdieukhien">
+                                    <Card.Link as={Link} to="/Trainer/HocPhan">
+                                        <Card.Img variant="top" src={imageQuanLyKhoa} />
+                                        <Card.Title className="mt-3">
+                                            <strong>KHOA</strong>
+                                        </Card.Title>
+                                    </Card.Link>
+                                </Card>
+                            </Col>
+                            <Col>
+                                <Card className="items-bangdieukhien">
+                                    <Card.Link as={Link} to="/Trainer/HocPhan">
+                                        <Card.Img variant="top" src={imageQuanLyChuyenNganh} />
+                                        <Card.Title className="mt-3">
+                                            <strong>CHUYÊN NGÀNH</strong>
+                                        </Card.Title>
+                                    </Card.Link>
+                                </Card>
+                            </Col>
+                            <Col>
+                                <Card className="items-bangdieukhien">
+                                    <Card.Link as={Link} to="/Trainer/HocPhan">
+                                        <Card.Img variant="top" src={imageQuanLyLopHoc} />
+                                        <Card.Title className="mt-3">
+                                            <strong>LỚP HỌC</strong>
+                                        </Card.Title>
+                                    </Card.Link>
+                                </Card>
+                            </Col>
+                        </Row>
+                        <Row>  
+                            <Col>
+                                <Card className="items-bangdieukhien">
+                                    <Card.Link as={Link} to="/Trainer/HocPhan">
+                                        <Card.Img variant="top" src={imageQuanLyNamHoc} />
+                                        <Card.Title className="mt-3">
+                                            <strong>NĂM HỌC</strong>
+                                        </Card.Title>
+                                    </Card.Link>
+                                </Card>
+                            </Col>
+                            <Col>
+                                <Card className="items-bangdieukhien">
+                                    <Card.Link as={Link} to="/Trainer/HocPhan">
+                                        <Card.Img variant="top" src={imageQuanLyLyDo} />
+                                        <Card.Title className="mt-3">
+                                            <strong>LÝ DO </strong>
                                         </Card.Title>
                                     </Card.Link>
                                 </Card>
                             </Col>
                             <Col></Col>
+                            <Col></Col>
                         </Row>
+                        {/* <Row>
+                            <Col>
+                                <Card className="items-bangdieukhien">
+                                    <Card.Link as={Link} to="/Trainer/HocPhan">
+                                        <Card.Img variant="top" src={imageDangKiHocPhan} />
+                                        <Card.Title className="mt-3">
+                                            <strong>LÝ DO </strong>
+                                        </Card.Title>
+                                    </Card.Link>
+                                </Card>
+                            </Col>
+                            
+                        </Row> */}
                     </Col>
                 </Row>
             </Container>

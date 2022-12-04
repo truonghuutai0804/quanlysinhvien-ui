@@ -343,7 +343,7 @@ function QuanLiHocPhan() {
             <Modal show={showSuaLai} onHide={handleCloseSuaLai} animation={true} scrollable={true}>
                 <Modal.Header closeButton>
                     <Modal.Title className="infor-edit">
-                        <FaEdit size={50} /> SỬA LẠI THÔNG TIN SINH VIÊN
+                        <FaEdit size={50} /> SỬA LẠI HỌC PHẦN
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="show-grid">
@@ -400,12 +400,8 @@ function QuanLiHocPhan() {
                             </Form.Label>
                             <Form.Control
                                 type="text"
-                                name="SO_LUONG"
-                                value={editInfoHocPhan.SO_LUONG}
-                                onChange={(e) =>
-                                    setEditInfoHocPhan({ ...editInfoHocPhan, [e.target.name]: e.target.value })
-                                }
-                                autoFocus
+                                defaultValue={editInfoHocPhan.SO_LUONG}
+                                disabled
                             />
                         </Form.Group>
                         <Form.Group className="mb-3">

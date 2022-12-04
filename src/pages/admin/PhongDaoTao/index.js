@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Col, Container, Form, Modal, Row, Table } from 'react-bootstrap'
-import { MdAddBox, MdOutlineUploadFile } from 'react-icons/md'
+import { MdAddBox } from 'react-icons/md'
 import { FaTrashAlt, FaEdit, FaEye } from 'react-icons/fa'
 import imageNguoiDung from '~/asset/images/icon_user.png'
 import axios from 'axios'

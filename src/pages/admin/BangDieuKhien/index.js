@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
-import { FaChalkboardTeacher, FaRegChartBar } from 'react-icons/fa'
+import { FaChalkboardTeacher } from 'react-icons/fa'
 import { MdEngineering, MdOutlineGroups } from 'react-icons/md'
 import './BangDieuKhien.scss'
 import axios from 'axios'

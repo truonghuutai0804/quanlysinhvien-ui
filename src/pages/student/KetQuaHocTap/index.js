@@ -2,12 +2,13 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Col, Container, Form, Row, Table } from 'react-bootstrap'
 import './KetQuaHocTap.scss'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
+import { GiReturnArrow } from 'react-icons/gi'
 
 function KetQuaHocTap() {
     const [year, setYear] = useState([])
     const [semester, setSemester] = useState([])
     const [input, setInput] = useState([])
-    const [result, setResult] = useState([])
     const [ketQua, setKetQua] = useState([])
 
     const [resultAll, setResultAll] = useState([])
@@ -45,26 +46,23 @@ function KetQuaHocTap() {
         }
     }, [])
 
-    const getKetQua = useCallback(
-        async (id) => {
-            try {
-                const options = {
-                    method: 'get',
-                    url: `http://localhost:8080/api/scoreSV/${id}?MA_NH=${input.MA_NH}&MA_HK=${input.MA_HK}`,
-                }
-                const response = await axios(options)
-                const results = response.data.data
-                if (response.data.message === 'SUCCESS') {
-                    setResult(results)
-                }
-            } catch (error) {
-                console.log(error)
+    const getTatCaKetQuaSV = useCallback(async (id) => {
+        try {
+            const options = {
+                method: 'get',
+                url: `http://localhost:8080/api/scores/${id}`,
             }
-        },
-        [input.MA_HK, input.MA_NH],
-    )
+            const response = await axios(options)
+            const results = response.data.data
+            if (response.data.message === 'SUCCESS') {
+                setResultAll(results)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }, [])
 
-    const getKetQua2 = useCallback(
+    const getKetQua = useCallback(
         async (id) => {
             try {
                 const options = {
@@ -75,41 +73,19 @@ function KetQuaHocTap() {
                 const results = response.data.data
                 if (response.data.status === 400) {
                     setKetQua(results)
+                    getTatCaKetQuaSV(MA_SV)
                 }
             } catch (error) {
                 console.log(error)
             }
         },
-        [input.MA_HK, input.MA_NH],
+        [input.MA_HK, input.MA_NH, getTatCaKetQuaSV, MA_SV],
     )
 
-    const getTatCaKetQuaSV = useCallback(async (id) => {
-        try {
-            const options = {
-                method: 'get',
-                url: `http://localhost:8080/api/allScoreSV/${id}`,
-            }
-            const response = await axios(options)
-            const results = response.data.data
-            console.log(results)
-            if (response.data.message === 'SUCCESS') {
-                setResultAll(results)
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }, [])
-
     useEffect(() => {
-        getTatCaKetQuaSV(MA_SV)
         getNamHoc()
         getHocKi()
-    }, [getNamHoc, getHocKi, getKetQua, getTatCaKetQuaSV, MA_SV])
-
-    const getTongKetQua = () => {
-        getKetQua(MA_SV)
-        getKetQua2(MA_SV)
-    }
+    }, [getNamHoc, getHocKi, MA_SV])
 
     var tongDiemTBHK = 0
     var tongDiemHK = 0
@@ -119,18 +95,18 @@ function KetQuaHocTap() {
     var tongDiemTL = 0
     var tongTinChiTL = 0
 
-    if (result.length > 0) {
-        result.forEach((item) => {
-            tongDiemHK += Number(item[7]) * Number(item[6])
-            tongTinChiHK += Number(item[6])
+    if (ketQua.length > 0) {
+        ketQua.forEach((item) => {
+            tongDiemHK += item.DIEM_SO * item.TIN_CHI
+            tongTinChiHK += item.TIN_CHI
         })
         tongDiemTBHK = (4 * (tongDiemHK / tongTinChiHK)) / 10
     }
 
     if (resultAll.length > 0) {
         resultAll.forEach((item) => {
-            tongDiemTL += Number(item[7]) * Number(item[6])
-            tongTinChiTL += Number(item[6])
+            tongDiemTL += item.DIEM_SO * item.TIN_CHI
+            tongTinChiTL += item.TIN_CHI
         })
         tongDiemTBTL = (4 * (tongDiemTL / tongTinChiTL)) / 10
     }
@@ -138,6 +114,9 @@ function KetQuaHocTap() {
     return (
         <>
             <Container className="wrap-ketquahoctap">
+                <Link to="/" className="btn btn-outline-primary m-3">
+                    <GiReturnArrow /> Quay Lại
+                </Link>
                 <h2>KẾT QUẢ HỌC TẬP</h2>
                 <Form className="form-ketquahoctap">
                     <Form.Group className="mb-3 d-flex">
@@ -183,13 +162,14 @@ function KetQuaHocTap() {
                                 ))}
                         </Form.Select>
                     </Form.Group>
-                    <Button className="ms-3 button-ketquahoctap" size="sm" onClick={getTongKetQua}>
+                    <Button className="ms-3 button-ketquahoctap" size="sm" onClick={() => getKetQua(MA_SV)}>
                         Liệt kê
                     </Button>
                 </Form>
                 <Table bordered hover>
                     <thead>
                         <tr>
+                            <th>#</th>
                             <th>Mã môn học</th>
                             <th>Tên môn học</th>
                             <th>Số tín chỉ</th>
@@ -198,31 +178,24 @@ function KetQuaHocTap() {
                         </tr>
                     </thead>
                     <tbody>
-                        {result &&
-                            result.map((item, idx) =>
-                                item[2] !== '' ? (
-                                    <tr key={idx}>
-                                        <td className="ketquahoctap-text">{item[4]}</td>
-                                        <td>{item[5]}</td>
-                                        <td className="ketquahoctap-text">{item[6]}</td>
-                                        <td className="ketquahoctap-text">{item[7]}</td>
-                                        <td className="ketquahoctap-text">{item[8]}</td>
-                                    </tr>
-                                ) : null,
-                            )}
-
-                        {ketQua &&
-                            ketQua.map((item, idx) =>
-                                item.THEM_DIEM !== 1 ? (
-                                    <tr key={idx}>
-                                        <td className="ketquahoctap-text">{item.MA_MH}</td>
-                                        <td>{item.TEN_MH}</td>
-                                        <td className="ketquahoctap-text">{item.TIN_CHI}</td>
-                                        <td className="ketquahoctap-text">{item.DIEM_SO}</td>
-                                        <td className="ketquahoctap-text">{item.DIEM_CHU}</td>
-                                    </tr>
-                                ) : null,
-                            )}
+                        {ketQua.length > 0 ? (
+                            ketQua.map((item, idx) => (
+                                <tr key={idx}>
+                                    <td className="ketquahoctap-text">{idx + 1}</td>
+                                    <td className="ketquahoctap-text">{item.MA_MH}</td>
+                                    <td>{item.TEN_MH}</td>
+                                    <td className="ketquahoctap-text">{item.TIN_CHI}</td>
+                                    <td className="ketquahoctap-text">{item.DIEM_SO}</td>
+                                    <td className="ketquahoctap-text">{item.DIEM_CHU}</td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="6" className="text-center">
+                                    Vui lòng chọn năm học và học kì rồi nhấn liệt kê để xem điểm
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </Table>
                 <Row className="ms-3">
@@ -239,8 +212,8 @@ function KetQuaHocTap() {
                         <p>Ðiểm trung bình tích lũy:</p>
                     </Col>
                     <Col>
-                        <p>{tongDiemTBHK}</p>
-                        <p>{tongDiemTBTL}</p>
+                        <p>{tongDiemTBHK.toFixed(2)}</p>
+                        <p>{tongDiemTBTL.toFixed(2)}</p>
                     </Col>
                 </Row>
             </Container>

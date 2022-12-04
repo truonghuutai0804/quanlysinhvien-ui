@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Card, Col, Container, Row, Table } from 'react-bootstrap'
 import './BangDieuKhien.scss'
-import imageDangKiHocPhan from '~/asset/images/hetinchi.gif'
 import imageKetQuaHocTap from '~/asset/images/ql_diem.gif'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
