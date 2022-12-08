@@ -8,6 +8,7 @@ import axios from 'axios'
 import Swal from 'sweetalert2'
 import { GiReturnArrow } from 'react-icons/gi'
 import { Link } from 'react-router-dom'
+import moment from 'moment'
 
 function DanhSachGiaoVien() {
     const [teacher, setTeacher] = useState([])
@@ -112,7 +113,7 @@ function DanhSachGiaoVien() {
                                         <td>{item.MA_GV}</td>
                                         <td>{item.HOTEN_GV}</td>
                                         <td>{item.GIOITINH_GV === 1 ? 'Nam' : 'Nữ'}</td>
-                                        <td>{item.NGAYSINH_GV}</td>
+                                        <td>{moment(item.NGAYSINH_GV).format('DD/MM/YYYY')}</td>
                                         <td>{item.SODIENTHOAI_GV}</td>
                                         <td>{item.TINH_THANH}</td>
                                         <td className="table-text-center">
@@ -281,31 +282,45 @@ function DanhSachGiaoVien() {
                                 />
                             </Col>
                             <Col xs={12} md={8}>
-                                <aside>
-                                    <p>
-                                        <strong>Mã: </strong> {seeTeacher.MA_GV}
-                                    </p>
-                                    <p>
-                                        <strong>Họ tên: </strong> {seeTeacher.HOTEN_GV}
-                                    </p>
-                                    <p>
-                                        <strong>Ngày sinh: </strong> {seeTeacher.NGAYSINH_GV}
-                                    </p>
-                                    <p>
-                                        <strong>Giới tính: </strong> {seeTeacher.GIOITINH_GV === 1 ? 'Nam' : 'Nữ'}
-                                    </p>
-                                    {/* <p>
-                                        <strong>Chuyên ngành: </strong> {seeTeacher.TEN_CN}
-                                    </p>
-                                    <p>
-                                        <strong>Khoa: </strong> {seeTeacher.TEN_KHOA}
-                                    </p> */}
-                                    <p>
-                                        <strong>Điện thoại liên lạc: </strong> {seeTeacher.SODIENTHOAI_GV}
-                                    </p>
-                                    <p>
-                                        <strong>Địa chỉ liên lạc: </strong> {seeTeacher.TINH_THANH}
-                                    </p>
+                            <aside className="border rounded border-secondary mb-2">
+                                    <h5 className="text-center my-2">Thông tin cơ bản</h5>
+                                    <aside className="ms-2">
+                                        <p>
+                                            <strong>MSSV: </strong> {seeTeacher.MA_GV}
+                                        </p>
+                                        <p>
+                                            <strong>Họ tên: </strong> {seeTeacher.HOTEN_GV}
+                                        </p>
+                                        <p>
+                                            <strong>Ngày sinh: </strong> {moment(seeTeacher.NGAYSINH_GV).format('DD/MM/YYYY')}
+                                        </p>
+                                        <p>
+                                            <strong>Điện thoại liên lạc: </strong> {seeTeacher.SODIENTHOAI_GV}
+                                        </p>
+                                        <p>
+                                            <strong>Email: </strong> {seeTeacher.EMAIL_GV}
+                                        </p>
+                                        <p>
+                                            <strong>Địa chỉ liên lạc: </strong> {seeTeacher.TINH_THANH}
+                                        </p>
+                                    </aside>
+                                </aside>
+                                <aside className="border rounded border-secondary">
+                                    <h5 className="text-center my-2">Thông tin gia đình</h5>
+                                    <aside className="ms-2">
+                                        <p>
+                                            <strong>Cha của sinh viên: </strong> {seeTeacher.TENCHA_GV}
+                                        </p>
+                                        <p>
+                                            <strong>Tuổi của cha sinh viên: </strong> {seeTeacher.TUOICHA_GV}
+                                        </p>
+                                        <p>
+                                            <strong>Mẹ của sinh viên: </strong> {seeTeacher.TENME_GV}
+                                        </p>
+                                        <p>
+                                            <strong>Tuổi của mẹ sinh viên: </strong> {seeTeacher.TUOIME_GV}
+                                        </p>
+                                    </aside>
                                 </aside>
                             </Col>
                         </Row>

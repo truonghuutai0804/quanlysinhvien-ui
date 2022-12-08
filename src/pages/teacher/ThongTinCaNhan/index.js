@@ -2,6 +2,9 @@ import React, { useCallback, useEffect, useState } from 'react'
 import axios from 'axios'
 import { Container, Table } from 'react-bootstrap'
 import './ThongTinCaNhan.scss'
+import { Link } from 'react-router-dom'
+import { GiReturnArrow } from 'react-icons/gi'
+import moment from 'moment'
 
 function ThongTinCaNhan() {
     const [teacher, setTeacher] = useState([])
@@ -29,7 +32,11 @@ function ThongTinCaNhan() {
     return (
         <>
             <Container className="wrap-thongtincanhan">
+                <Link to="/Teacher" className="btn btn-outline-primary btn-lg mt-4">
+                    <GiReturnArrow /> Quay lại
+                </Link>
                 <h2>THÔNG TIN GIÁO VIÊN</h2>
+                <h3>Thông tin cơ bản</h3>
                 <Table hover>
                     <tbody>
                         <tr>
@@ -42,11 +49,15 @@ function ThongTinCaNhan() {
                         </tr>
                         <tr>
                             <th>Ngày sinh:</th>
-                            <td>{teacher.NGAYSINH_GV}</td>
+                            <td>{moment(teacher.NGAYSINH_GV).format('DD/MM/YYYY')}</td>
                         </tr>
                         <tr>
                             <th>Giới tính:</th>
                             <td>{teacher.GIOITINH_GV ? 'Nam' : 'Nữ'}</td>
+                        </tr>
+                        <tr>
+                            <th>Email:</th>
+                            <td>{teacher.EMAIL_GV}</td>
                         </tr>
                         <tr>
                             <th>Số điện thoại:</th>
@@ -55,6 +66,29 @@ function ThongTinCaNhan() {
                         <tr>
                             <th>Địa chỉ:</th>
                             <td>{teacher.TINH_THANH}</td>
+                        </tr>
+                    </tbody>
+                </Table>
+
+                <h3>Thông tin gia đình</h3>
+
+                <Table hover>
+                    <tbody>
+                        <tr>
+                            <th>Họ tên cha:</th>
+                            <td>{teacher.TENCHA_GV}</td>
+                        </tr>
+                        <tr>
+                            <th>Tuổi của cha:</th>
+                            <td>{teacher.TUOICHA_GV}</td>
+                        </tr>
+                        <tr>
+                            <th>Họ tên mẹ:</th>
+                            <td>{teacher.TENME_GV}</td>
+                        </tr>
+                        <tr>
+                            <th>Tuổi của mẹ:</th>
+                            <td>{teacher.TUOIME_GV}</td>
                         </tr>
                     </tbody>
                 </Table>

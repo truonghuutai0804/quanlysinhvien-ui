@@ -107,7 +107,7 @@ const BangDieuKhien = () => {
                             </Col>
                             <Col>
                                 <Card className="items-bangdieukhien">
-                                    <Card.Link as={Link} to="/Trainer/HocPhan">
+                                    <Card.Link as={Link} to="/Trainer/DiemSinhVien">
                                         <Card.Img variant="top" src={imageQuanLyDiem} />
                                         <Card.Title className="mt-3">
                                             <strong>ĐIỂM SV</strong>
@@ -129,7 +129,7 @@ const BangDieuKhien = () => {
                             </Col>
                             <Col>
                                 <Card className="items-bangdieukhien">
-                                    <Card.Link as={Link} to="/Trainer/HocPhan">
+                                    <Card.Link as={Link} to="/Trainer/Khoa">
                                         <Card.Img variant="top" src={imageQuanLyKhoa} />
                                         <Card.Title className="mt-3">
                                             <strong>KHOA</strong>
@@ -161,7 +161,7 @@ const BangDieuKhien = () => {
                         <Row>  
                             <Col>
                                 <Card className="items-bangdieukhien">
-                                    <Card.Link as={Link} to="/Trainer/HocPhan">
+                                    <Card.Link as={Link} to="/Trainer/NamHoc">
                                         <Card.Img variant="top" src={imageQuanLyNamHoc} />
                                         <Card.Title className="mt-3">
                                             <strong>NĂM HỌC</strong>
@@ -171,7 +171,7 @@ const BangDieuKhien = () => {
                             </Col>
                             <Col>
                                 <Card className="items-bangdieukhien">
-                                    <Card.Link as={Link} to="/Trainer/HocPhan">
+                                    <Card.Link as={Link} to="/Trainer/LyDo">
                                         <Card.Img variant="top" src={imageQuanLyLyDo} />
                                         <Card.Title className="mt-3">
                                             <strong>LÝ DO </strong>

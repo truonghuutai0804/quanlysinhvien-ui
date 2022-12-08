@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Container, Table } from 'react-bootstrap'
 import './ThongTinCaNhan.scss'
 import { Link } from 'react-router-dom'
+import { GiReturnArrow } from 'react-icons/gi'
 
 function ThongTinCaNhan() {
     const [trainer, setTrainer] = useState([])
@@ -30,7 +31,12 @@ function ThongTinCaNhan() {
     return (
         <>
             <Container className="wrap-thongtincanhan">
+                <Link to="/Trainer" className="btn btn-outline-primary btn-lg mt-4">
+                    <GiReturnArrow /> Quay lại
+                </Link>
                 <h2>THÔNG TIN NHÂN VIÊN</h2>
+                <h3>Thông tin cơ bản</h3>
+
                 <Table hover>
                     <tbody>
                         <tr>
@@ -46,6 +52,10 @@ function ThongTinCaNhan() {
                             <td>{trainer.NGAYSINH_GV}</td>
                         </tr>
                         <tr>
+                            <th>Email:</th>
+                            <td>{trainer.EMAIL_GV}</td>
+                        </tr>
+                        <tr>
                             <th>Giới tính:</th>
                             <td>{trainer.GIOITINH_GV ? 'Nam' : 'Nữ'}</td>
                         </tr>
@@ -59,7 +69,29 @@ function ThongTinCaNhan() {
                         </tr>
                     </tbody>
                 </Table>
-                <Link to="/Trainer" className="btn btn-primary btn-lg mt-4">Quay lại</Link>
+
+                <h3>Thông tin gia đình</h3>
+
+                <Table hover>
+                    <tbody>
+                        <tr>
+                            <th>Họ tên cha:</th>
+                            <td>{trainer.TENCHA_GV}</td>
+                        </tr>
+                        <tr>
+                            <th>Tuổi của cha:</th>
+                            <td>{trainer.TUOICHA_GV}</td>
+                        </tr>
+                        <tr>
+                            <th>Họ tên mẹ:</th>
+                            <td>{trainer.TENME_GV}</td>
+                        </tr>
+                        <tr>
+                            <th>Tuổi của mẹ:</th>
+                            <td>{trainer.TUOIME_GV}</td>
+                        </tr>
+                    </tbody>
+                </Table>
             </Container>
         </>
     )

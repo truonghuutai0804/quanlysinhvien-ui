@@ -1,6 +1,5 @@
 import { LoginLayout } from '~/layouts'
 import {
-    BangDieuKhien,
     ChuyenNganh,
     DiemSinhVien,
     GiaoVien,
@@ -28,14 +27,17 @@ import ThongTinCaNhanPDT from '~/pages/trainer/ThongTinCaNhan'
 import DanhSachSinhVienPDT from '~/pages/trainer/DanhSachSinhVien'
 import DanhSachGiaoVienPDT from '~/pages/trainer/DanhSachGiaoVien'
 import QuanLiHocPhanPDT from '~/pages/trainer/QuanLiHocPhan'
+import QuanLyNamHocPDT from '~/pages/trainer/QuanLyNamHoc'
+import QuanLyDiemPDT from '~/pages/trainer/QuanLyDiem'
+import QuanLyLyDoPDT from '~/pages/trainer/QuanLyLyDo'
+import QuanLyKhoaPDT from '~/pages/trainer/QuanLyKhoa'
 
 
 import DangNhap from '~/pages/DangNhap'
 
 // Truy cập trang sau khi đăng nhập
 const privateRoutes = [
-    { path: '/Admin/', component: BangDieuKhien },
-    { path: '/Admin/ThongTinSinhVien', component: ThongTinSinhVien },
+    { path: '/Admin/', component: ThongTinSinhVien },
     { path: '/Admin/DiemSinhVien', component: DiemSinhVien },
     { path: '/Admin/PhongDaoTao', component: PhongDaoTao },
     { path: '/Admin/GiaoVien', component: GiaoVien },
@@ -60,6 +62,10 @@ const trainerRoutes = [
     { path: '/Trainer/DanhSachSinhVien', component: DanhSachSinhVienPDT },
     { path: '/Trainer/DanhSachGiaoVien', component: DanhSachGiaoVienPDT },
     { path: '/Trainer/HocPhan', component: QuanLiHocPhanPDT },
+    { path: '/Trainer/DiemSinhVien', component: QuanLyDiemPDT},
+    { path: '/Trainer/NamHoc', component: QuanLyNamHocPDT},
+    { path: '/Trainer/LyDo', component: QuanLyLyDoPDT},
+    { path: '/Trainer/Khoa', component: QuanLyKhoaPDT},
     { path: '/DangNhap', component: DangNhap, layout: LoginLayout },
 ]
 

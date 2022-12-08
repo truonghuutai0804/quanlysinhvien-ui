@@ -1,6 +1,6 @@
 .wrap-thongtincanhan{
     border: 1px solid;
-    height: 500px;
+    height: 650px !important;
     margin-top: 10px;
     border-radius: 20px;
     h2{
@@ -12,5 +12,10 @@
     }
     th,td{
         font-size: 15px;
+    }
+    table{
+        margin: 20px 0 20px 28px !important;
+        width: 80rem;
+
     }
 }

@@ -4,6 +4,7 @@ import './BangDieuKhien.scss'
 import imageKetQuaHocTap from '~/asset/images/ql_diem.gif'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import moment from 'moment'
 
 const BangDieuKhien = () => {
     const [teacher, setTeacher] = useState([])
@@ -46,7 +47,7 @@ const BangDieuKhien = () => {
                                 </tr>
                                 <tr>
                                     <th>Ngày sinh:</th>
-                                    <td>{teacher.NGAYSINH_GV}</td>
+                                    <td>{moment(teacher.NGAYSINH_GV).format('DD/MM/YYYY')}</td>
                                 </tr>
                                 <tr>
                                     <th>Giới tính:</th>

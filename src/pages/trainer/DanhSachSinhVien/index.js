@@ -361,31 +361,54 @@ function DanhSachSinhVien() {
                                 />
                             </Col>
                             <Col xs={12} md={8}>
-                                <aside>
-                                    <p>
-                                        <strong>MSSV: </strong> {infoSV.MA_SV}
-                                    </p>
-                                    <p>
-                                        <strong>Họ tên: </strong> {infoSV.HOTEN_SV}
-                                    </p>
-                                    <p>
-                                        <strong>Ngày sinh: </strong> {infoSV.NGAYSINH_SV}
-                                    </p>
-                                    <p>
-                                        <strong>Lớp: </strong> {infoSV.TEN_LOP}
-                                    </p>
-                                    <p>
-                                        <strong>Chuyên ngành: </strong> {infoSV.TEN_CN}
-                                    </p>
-                                    <p>
-                                        <strong>Khoa: </strong> {infoSV.TEN_KHOA}
-                                    </p>
-                                    <p>
-                                        <strong>Điện thoại liên lạc: </strong> {infoSV.SODIENTHOAI_SV}
-                                    </p>
-                                    <p>
-                                        <strong>Địa chỉ liên lạc: </strong> {infoSV.TINH_THANH}
-                                    </p>
+                                <aside className="border rounded border-secondary mb-2">
+                                    <h5 className="text-center my-2">Thông tin cơ bản</h5>
+                                    <aside className="ms-2">
+                                        <p>
+                                            <strong>MSSV: </strong> {infoSV.MA_SV}
+                                        </p>
+                                        <p>
+                                            <strong>Họ tên: </strong> {infoSV.HOTEN_SV}
+                                        </p>
+                                        <p>
+                                            <strong>Ngày sinh: </strong> {infoSV.NGAYSINH_SV}
+                                        </p>
+                                        <p>
+                                            <strong>Email: </strong> {infoSV.EMAIL_SV}
+                                        </p>
+                                        <p>
+                                            <strong>Lớp: </strong> {infoSV.TEN_LOP}
+                                        </p>
+                                        <p>
+                                            <strong>Chuyên ngành: </strong> {infoSV.TEN_CN}
+                                        </p>
+                                        <p>
+                                            <strong>Khoa: </strong> {infoSV.TEN_KHOA}
+                                        </p>
+                                        <p>
+                                            <strong>Điện thoại liên lạc: </strong> {infoSV.SODIENTHOAI_SV}
+                                        </p>
+                                        <p>
+                                            <strong>Địa chỉ liên lạc: </strong> {infoSV.TINH_THANH}
+                                        </p>
+                                    </aside>
+                                </aside>
+                                <aside className="border rounded border-secondary">
+                                    <h5 className="text-center my-2">Thông tin gia đình</h5>
+                                    <aside className="ms-2">
+                                        <p>
+                                            <strong>Cha của sinh viên: </strong> {infoSV.TENCHA_SV}
+                                        </p>
+                                        <p>
+                                            <strong>Tuổi của cha sinh viên: </strong> {infoSV.TUOICHA_SV}
+                                        </p>
+                                        <p>
+                                            <strong>Mẹ của sinh viên: </strong> {infoSV.TENME_SV}
+                                        </p>
+                                        <p>
+                                            <strong>Tuổi của mẹ sinh viên: </strong> {infoSV.TUOIME_SV}
+                                        </p>
+                                    </aside>
                                 </aside>
                             </Col>
                         </Row>
@@ -491,7 +514,7 @@ function DanhSachSinhVien() {
                                 >
                                     {infoClass &&
                                         infoClass.map((item, idx) => (
-                                            <option key={idx} value={item.MA_LOP} >
+                                            <option key={idx} value={item.MA_LOP}>
                                                 {item.TEN_LOP}
                                             </option>
                                         ))}
@@ -523,7 +546,7 @@ function DanhSachSinhVien() {
                                     onChange={(e) =>
                                         setEditInfoSV({
                                             ...editInfoSV,
-                                            [e.target.name]: e.target.value
+                                            [e.target.name]: e.target.value,
                                         })
                                     }
                                 >
@@ -542,7 +565,7 @@ function DanhSachSinhVien() {
                     <Button variant="secondary" onClick={handleCloseSuaLai}>
                         Hủy
                     </Button>
-                    <Button variant="primary" onClick={()=>editSinhVien(editInfoSV.MA_SV)}>
+                    <Button variant="primary" onClick={() => editSinhVien(editInfoSV.MA_SV)}>
                         Lưu lại
                     </Button>
                 </Modal.Footer>
