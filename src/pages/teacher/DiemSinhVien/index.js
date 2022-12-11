@@ -18,6 +18,7 @@ function KetQuaHocTap() {
     const [edit, setEdit] = useState([])
     const [fileName, setFileName] = useState([])
     const [getDSSVPrint, setGetDSSVPrint] = useState([])
+    const [getDSDiemPrint, setGetDSDiemPrint] = useState([])
     const [fileExcel, setFileExcel] = useState([])
     const [result, setResult] = useState([])
     const MA_GV = localStorage.getItem('login')
@@ -58,7 +59,7 @@ function KetQuaHocTap() {
 
     const handleClosePrintScore = () => {
         setShowPrintScore(false)
-        setGetDSSVPrint([])
+        setGetDSDiemPrint([])
     }
 
     const handleShowPrintScore = () => {
@@ -132,12 +133,28 @@ function KetQuaHocTap() {
         try {
             const options = {
                 method: 'get',
-                url: `http://localhost:8080/api/scoreSVPrintGV/${id}?MA_NHP=${input.MA_NHP}`,
+                url: `http://localhost:8080/api/scoreDSSVPrintGV/${id}?MA_NHP=${input.MA_NHP}`,
             }
             const response = await axios(options)
             const results = response.data.dataDiem
             if (response.data.message === 'SUCCESS') {
                 setGetDSSVPrint(results)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const getDiemPrint = async (id) => {
+        try {
+            const options = {
+                method: 'get',
+                url: `http://localhost:8080/api/scoreSVPrintGV/${id}?MA_NHP=${input.MA_NHP}`,
+            }
+            const response = await axios(options)
+            const results = response.data.dataDiem
+            if (response.data.message === 'SUCCESS') {
+                setGetDSDiemPrint(results)
             }
         } catch (error) {
             console.log(error)
@@ -707,6 +724,17 @@ function KetQuaHocTap() {
                                 )}
                             </tbody>
                         </Table>
+                        <br />
+                        <span className="text-end">
+                            <p>. . . . . . . ., ngày . . . . tháng . . . . năm . . . . .</p>
+                            <p style={{ marginRight: '90px' }}>
+                                <b>Xác nhận</b>
+                            </p>
+                        </span>
+                        <br />
+                        <br />
+                        <br />
+                        <br />
                     </aside>
                 </Modal.Body>
                 <Modal.Footer>
@@ -751,7 +779,7 @@ function KetQuaHocTap() {
                             className="ms-3 h-25"
                             size="sm"
                             onClick={() => {
-                                getSVPrint(MA_GV)
+                                getDiemPrint(MA_GV)
                             }}
                         >
                             Xuất
@@ -761,13 +789,14 @@ function KetQuaHocTap() {
                         <h3 className="text-center mt-3">DANH SÁCH ĐIỂM</h3>
                         <p className="text-center">
                             Nhóm học phần:{' '}
-                            {getDSSVPrint[0] !== undefined && getDSSVPrint[0].TEN_MH + ' ' + getDSSVPrint[0].MA_NHP}
+                            {getDSDiemPrint[0] !== undefined &&
+                                getDSDiemPrint[0].TEN_MH + ' ' + getDSDiemPrint[0].MA_NHP}
                         </p>
                         <p className="text-center">
                             <span className="me-3">
-                                Năm học: {getDSSVPrint[0] !== undefined && getDSSVPrint[0].NAM_HOC}
+                                Năm học: {getDSDiemPrint[0] !== undefined && getDSDiemPrint[0].NAM_HOC}
                             </span>
-                            <span>Học kì: {getDSSVPrint[0] !== undefined && getDSSVPrint[0].HOC_KY}</span>
+                            <span>Học kì: {getDSDiemPrint[0] !== undefined && getDSDiemPrint[0].HOC_KY}</span>
                         </p>
                         <Table bordered hover>
                             <thead>
@@ -793,8 +822,8 @@ function KetQuaHocTap() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {getDSSVPrint[0] !== undefined ? (
-                                    getDSSVPrint.map((item, idx) => (
+                                {getDSDiemPrint[0] !== undefined ? (
+                                    getDSDiemPrint.map((item, idx) => (
                                         <tr>
                                             <td>{idx + 1}</td>
                                             <td>{item.MA_SV}</td>
@@ -814,6 +843,17 @@ function KetQuaHocTap() {
                                 )}
                             </tbody>
                         </Table>
+                        <br />
+                        <span className="text-end">
+                            <p>. . . . . . . ., ngày . . . . tháng . . . . năm . . . . .</p>
+                            <p style={{ marginRight: '90px' }}>
+                                <b>Xác nhận</b>
+                            </p>
+                        </span>
+                        <br />
+                        <br />
+                        <br />
+                        <br />
                     </aside>
                 </Modal.Body>
                 <Modal.Footer>

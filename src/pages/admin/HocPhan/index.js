@@ -1,12 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
 import { Button, Container, Modal, Table, Form } from 'react-bootstrap'
 import { MdAddBox } from 'react-icons/md'
-import { GiReturnArrow } from 'react-icons/gi'
 import { FaEdit, FaTrashAlt } from 'react-icons/fa'
 
-function QuanLiHocPhan() {
+function HocPhan() {
     const [year, setYear] = useState([])
     const [semester, setSemester] = useState([])
     const [subject, setSubject] = useState([])
@@ -180,9 +178,6 @@ function QuanLiHocPhan() {
         <>
             <Container>
                 <aside className="ms-4">
-                        <Link className="btn btn-outline-secondary mt-3"  to="/Trainer">
-                            <GiReturnArrow /> Quay Lại
-                        </Link>
                     <h2 className="my-5 text-center">DANH SÁCH NHÓM HỌC PHẦN</h2>
                         <Button variant="outline-primary" className='mb-3 ms-4' onClick={handleShowThemMoi}>
                             <MdAddBox /> Thêm học phần mới
@@ -479,4 +474,4 @@ function QuanLiHocPhan() {
     )
 }
 
-export default QuanLiHocPhan
+export default HocPhan

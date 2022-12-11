@@ -7,7 +7,8 @@ import { MdAddBox } from 'react-icons/md'
 import { Link } from 'react-router-dom'
 import Swal from 'sweetalert2'
 
-const QuanLyKhoa = () => {
+const QuanLyChuyenNganh = () => {
+    const [khoa, setKhoa] = useState([])
     const [data, setData] = useState([])
     const [createInput, setCreateInput] = useState([])
     const [editData, setEditData] = useState([])
@@ -21,24 +22,41 @@ const QuanLyKhoa = () => {
     const handleShowSuaLai = (info) => {
         setEditData(info)
         setShowSuaLai(true)
+        getKhoa()
     }
     const handleShowXoa = (info) => {
-      setShowXoa(true)
-      setDeleteData(info)
+        setShowXoa(true)
+        setDeleteData(info)
     }
 
     const handleCloseThemMoi = () => {
-      setCreateInput()
-      setShowThemMoi(false)
+        setCreateInput()
+        setShowThemMoi(false)
     }
     const handleCloseSuaLai = () => setShowSuaLai(false)
     const handleCloseXoa = () => setShowXoa(false)
+
+    const getKhoa = useCallback(async () => {
+        try {
+            const options = {
+                method: 'get',
+                url: 'http://localhost:8080/api/faculty',
+            }
+            const response = await axios(options)
+            const datas = response.data.data
+            if (response.data.status === 400) {
+                setKhoa(datas)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }, [])
 
     const get = useCallback(async () => {
         try {
             const options = {
                 method: 'get',
-                url: 'http://localhost:8080/api/faculty',
+                url: 'http://localhost:8080/api/major',
             }
             const response = await axios(options)
             const datas = response.data.data
@@ -54,7 +72,7 @@ const QuanLyKhoa = () => {
         try {
             const options = {
                 method: 'post',
-                url: 'http://localhost:8080/api/faculty',
+                url: 'http://localhost:8080/api/major',
                 data: createInput,
             }
             const response = await axios(options)
@@ -73,47 +91,47 @@ const QuanLyKhoa = () => {
     }
 
     const update = async (id) => {
-      try {
-          const options = {
-              method: 'put',
-              url: `http://localhost:8080/api/faculty/${id}`,
-              data: editData,
-          }
-          const response = await axios(options)
-          if (response.data.message === 'SUCCESS') {
-              Swal.fire('Thành công', 'Bạn đã sửa thành công ', 'success')
-              handleCloseSuaLai()
-              get()
-          } else {
-              Swal.fire('Thất bại', 'Bạn đã sửa thất bại ', 'error')
-              handleCloseSuaLai()
-          }
-      } catch (error) {
-          Swal.fire('Thất bại', 'Bạn đã sửa thất bại ', 'error')
-          handleCloseSuaLai()
-      }
-  }
-
-  const Delete = async (id) => {
-    try {
-        const options = {
-            method: 'delete',
-            url: `http://localhost:8080/api/faculty/${id}`,
+        try {
+            const options = {
+                method: 'put',
+                url: `http://localhost:8080/api/major/${id}`,
+                data: editData,
+            }
+            const response = await axios(options)
+            if (response.data.message === 'SUCCESS') {
+                Swal.fire('Thành công', 'Bạn đã sửa thành công ', 'success')
+                handleCloseSuaLai()
+                get()
+            } else {
+                Swal.fire('Thất bại', 'Bạn đã sửa thất bại ', 'error')
+                handleCloseSuaLai()
+            }
+        } catch (error) {
+            Swal.fire('Thất bại', 'Bạn đã sửa thất bại ', 'error')
+            handleCloseSuaLai()
         }
-        const response = await axios(options)
-        if (response.data.message === 'SUCCESS') {
-            Swal.fire('Thành công', 'Bạn đã xóa thành công ', 'success')
-            handleCloseXoa()
-            get()
-        } else {
+    }
+
+    const Delete = async (id) => {
+        try {
+            const options = {
+                method: 'delete',
+                url: `http://localhost:8080/api/major/${id}`,
+            }
+            const response = await axios(options)
+            if (response.data.message === 'SUCCESS') {
+                Swal.fire('Thành công', 'Bạn đã xóa thành công ', 'success')
+                handleCloseXoa()
+                get()
+            } else {
+                Swal.fire('Thất bại', 'Bạn đã xóa thất bại ', 'error')
+                handleCloseXoa()
+            }
+        } catch (error) {
             Swal.fire('Thất bại', 'Bạn đã xóa thất bại ', 'error')
             handleCloseXoa()
         }
-    } catch (error) {
-        Swal.fire('Thất bại', 'Bạn đã xóa thất bại ', 'error')
-        handleCloseXoa()
     }
-}
 
     useEffect(() => {
         get()
@@ -128,13 +146,14 @@ const QuanLyKhoa = () => {
                             <GiReturnArrow /> Quay Lại
                         </Link>
                     </aside>
-                    <h2 className="my-5 text-center">QUẢN LÝ KHOA</h2>
-                    <Button onClick={handleShowThemMoi} className='mb-3 ms-4'>Thêm khoa mới</Button>
+                    <h2 className="my-5 text-center">QUẢN LÝ CHUYÊN NGÀNH</h2>
+                    <Button onClick={handleShowThemMoi} className='mb-3'>Thêm chuyên ngành mới</Button>
                     <Table bordered hover>
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Mã khoa</th>
+                                <th>Mã chuyên ngành</th>
+                                <th>Tên chuyên ngành</th>
                                 <th>Tên khoa</th>
                                 <th>Hành động</th>
                             </tr>
@@ -144,8 +163,9 @@ const QuanLyKhoa = () => {
                                 data.map((item, idx) => (
                                     <tr key={idx}>
                                         <td className="table-text-center">{idx + 1}</td>
-                                        <td className="table-text-center">{item.MA_KHOA}</td>
-                                        <td >{item.TEN_KHOA}</td>
+                                        <td className="table-text-center">{item.MA_CN}</td>
+                                        <td>{item.TEN_CN}</td>
+                                        <td>{item.TEN_KHOA}</td>
                                         <td className="table-text-center">
                                             <strong
                                                 className="infor-edit"
@@ -175,31 +195,48 @@ const QuanLyKhoa = () => {
                 <Modal.Header closeButton>
                     <Modal.Title className="infor-new">
                         <MdAddBox size={50} />
-                        THÊM KHOA MỚI
+                        THÊM CHUYÊN NGÀNH MỚI
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="show-grid">
                     <Form>
                         <Form.Group className="mb-3">
                             <Form.Label>
-                                <strong>Mã khoa</strong>
+                                <strong>Mã chuyên ngành</strong>
                             </Form.Label>
                             <Form.Control
                                 type="text"
-                                name="MA_KHOA"
+                                name="MA_CN"
                                 onChange={(e) => setCreateInput({ ...createInput, [e.target.name]: e.target.value })}
                                 autoFocus
                             />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>
-                                <strong>Tên khoa</strong>
+                                <strong>Tên chuyên ngành</strong>
                             </Form.Label>
                             <Form.Control
                                 type="text"
-                                name="TEN_KHOA"
+                                name="TEN_CN"
                                 onChange={(e) => setCreateInput({ ...createInput, [e.target.name]: e.target.value })}
                             />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>
+                                <strong>Tên khoa</strong>
+                            </Form.Label>
+                            <Form.Select
+                                name="MA_KHOA"
+                                onChange={(e) => setCreateInput({ ...createInput, [e.target.name]: e.target.value })}
+                            >
+                                <option value=" ">Chọn khoa</option>
+                                {khoa &&
+                                    khoa.map((item, idx) => (
+                                        <option key={idx} value={item.MA_KHOA}>
+                                            {item.TEN_KHOA}
+                                        </option>
+                                    ))}
+                            </Form.Select>
                         </Form.Group>
                     </Form>
                 </Modal.Body>
@@ -216,25 +253,45 @@ const QuanLyKhoa = () => {
             <Modal show={showSuaLai} onHide={handleCloseSuaLai} animation={true} scrollable={true}>
                 <Modal.Header closeButton>
                     <Modal.Title className="infor-edit">
-                        <FaEdit size={50} /> SỬA LẠI THÔNG TIN KHOA
+                        <FaEdit size={50} /> SỬA LẠI THÔNG TIN CHUYÊN NGÀNH
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="show-grid">
                     <Form>
                         <Form.Group className="mb-3">
                             <Form.Label>
-                                <strong>Mã khoa</strong>
+                                <strong>Mã chuyên ngành</strong>
                             </Form.Label>
-                            <Form.Control type="text" value={editData.MA_KHOA} disabled />
+                            <Form.Control type="text" value={editData.MA_CN} disabled />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>
                                 <strong>Tên khoa</strong>
                             </Form.Label>
+                            <Form.Select
+                                name="MA_KHOA"
+                                value={editData.MA_KHOA}
+                                onChange={(e) => setEditData({ ...editData, [e.target.name]: e.target.value })}
+                            >
+                                <option value="">Chọn khoa</option>
+                                {khoa &&
+                                    khoa.map((item, idx) => (
+                                        <>
+                                            <option key={idx} value={item.MA_KHOA}>
+                                                {item.TEN_KHOA}
+                                            </option>
+                                        </>
+                                    ))}
+                            </Form.Select>
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>
+                                <strong>Tên chuyên ngành</strong>
+                            </Form.Label>
                             <Form.Control
                                 type="text"
-                                name="TEN_KHOA"
-                                value={editData.TEN_KHOA}
+                                name="TEN_CN"
+                                value={editData.TEN_CN}
                                 onChange={(e) => setEditData({ ...editData, [e.target.name]: e.target.value })}
                                 autoFocus
                             />
@@ -245,7 +302,7 @@ const QuanLyKhoa = () => {
                     <Button variant="secondary" onClick={handleCloseSuaLai}>
                         Hủy
                     </Button>
-                    <Button variant="primary" onClick={() => update(editData.MA_KHOA)}>
+                    <Button variant="primary" onClick={() => update(editData.MA_CN)}>
                         Lưu lại
                     </Button>
                 </Modal.Footer>
@@ -254,17 +311,17 @@ const QuanLyKhoa = () => {
             <Modal show={showXoa} onHide={handleCloseXoa} animation={true} scrollable={true}>
                 <Modal.Header closeButton>
                     <Modal.Title className="infor-remove">
-                        <FaTrashAlt size={50} /> XÓA THÔNG TIN KHOA
+                        <FaTrashAlt size={50} /> XÓA THÔNG TIN CHUYÊN NGÀNH
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <p>
-                        Bạn có chắc chắn xóa thông tin của khoa <strong>{deleteData.TEN_KHOA}</strong> này ?
+                        Bạn có chắc chắn xóa thông tin của chuyên ngành <strong>{deleteData.TEN_CN}</strong> này ?
                     </p>
                     <strong>Lưu ý:</strong> Nếu xóa thông tin sẽ mất vĩnh viễn
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="danger" onClick={() => Delete(deleteData.MA_KHOA)}>
+                    <Button variant="danger" onClick={() => Delete(deleteData.MA_CN)}>
                         Chắc chắn
                     </Button>
                     <Button variant="secondary" onClick={handleCloseXoa}>
@@ -276,4 +333,4 @@ const QuanLyKhoa = () => {
     )
 }
 
-export default QuanLyKhoa
+export default QuanLyChuyenNganh

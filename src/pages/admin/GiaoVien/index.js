@@ -1,31 +1,35 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Button, Col, Container, Form, Modal, Row, Table } from 'react-bootstrap'
+import { Button, Container, Form, Modal, Table } from 'react-bootstrap'
 import { MdAddBox } from 'react-icons/md'
 import { FaTrashAlt, FaEdit, FaEye } from 'react-icons/fa'
-import imageNguoiDung from '~/asset/images/icon_user.png'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import moment from 'moment'
 
 function GiaoVien() {
     const [teacher, setTeacher] = useState([])
-    const [addTeacher, setAddTeacher] = useState([])
-    const [deleteTeacher, setDeleteTeacher] = useState([])
-    const [editTeacher, setEditTeacher] = useState([])
-    const [seeTeacher, setSeeTeacher] = useState([])
     const [infoProvince, setInfoProvince] = useState([])
+    const [create, setCreate] = useState([])
+    const [deleteTeacher, setDeleteTeacher] = useState([])
+    const [edit, setEdit] = useState([])
+    const [seeTeacher, setSeeTeacher] = useState([])
 
     const [showThemMoi, setShowThemMoi] = useState(false)
     const [showXemThongTin, setShowXemThongTin] = useState(false)
     const [showSuaLai, setShowSuaLai] = useState(false)
     const [showXoa, setShowXoa] = useState(false)
 
-    const handleShowThemMoi = () => setShowThemMoi(true)
+    const handleShowThemMoi = () => {
+        getTinh()
+        setShowThemMoi(true)
+    }
     const handleShowXemThongTin = (info) => {
         setSeeTeacher(info)
         setShowXemThongTin(true)
     }
     const handleShowSuaLai = (info) => {
-        setEditTeacher(info)
+        getTinh()
+        setEdit(info)
         setShowSuaLai(true)
     }
     const handleShowXoa = (info) => {
@@ -54,6 +58,7 @@ function GiaoVien() {
         }
     }, [])
 
+
     const getGiaoVien = useCallback(async () => {
         try {
             const options = {
@@ -70,39 +75,43 @@ function GiaoVien() {
         }
     }, [])
 
-    const createGiaoVien = async (id) => {
+    const setGiaoVien = async () => {
         try {
             const options = {
                 method: 'post',
-                url: `http://localhost:8080/api/teacher`,
-                data: addTeacher,
+                url: 'http://localhost:8080/api/teacher',
+                data: create,
             }
             const response = await axios(options)
             if (response.data.message === 'SUCCESS') {
                 handleCloseThemMoi()
-                Swal.fire('Thành công', 'Bạn đã xóa thành công ', 'success')
+                Swal.fire('Thành công', 'Bạn đã thêm mới thành công ', 'success')
                 getGiaoVien()
+            }else{
+                Swal.fire('Thất bại', 'Bạn đã thêm mới thất bại ', 'error')
             }
         } catch (error) {
-            Swal.fire('Thất bại', `Lỗi ${error}`, 'error')
+            console.log(error)
         }
     }
 
-    const updateGiaoVien = async (id) => {
+    const editGiaoVien = async (id) => {
         try {
             const options = {
                 method: 'put',
                 url: `http://localhost:8080/api/trainteacher/${id}`,
-                data: editTeacher,
+                data: edit,
             }
             const response = await axios(options)
             if (response.data.message === 'SUCCESS') {
                 handleCloseSuaLai()
-                Swal.fire('Thành công', 'Sửa thông tin giáo viên thành công ', 'success')
+                Swal.fire('Thành công', 'Bạn đã sửa thành công ', 'success')
                 getGiaoVien()
+            }else{
+                Swal.fire('Thất bại', 'Bạn đã sửa thất bại ', 'error')
             }
         } catch (error) {
-            Swal.fire('Thất bại', `Lỗi ${error}`, 'error')
+            console.log(error)
         }
     }
 
@@ -124,61 +133,58 @@ function GiaoVien() {
     }
 
     useEffect(() => {
-        getTinh()
         getGiaoVien()
-    }, [getGiaoVien, getTinh])
-
-    console.log(teacher)
+    }, [getGiaoVien])
 
     return (
         <>
-            <aside className="ms-4">
-                <h2 className="m-2">Thông tin giáo viên</h2>
-                <aside className="d-flex justify-content-between m-3">
-                    <Button variant="outline-primary" onClick={handleShowThemMoi}>
+            <Container>
+                <aside className="ms-4">
+                    <h2 className="my-3 text-center">DANH SÁCH GIÁO VIÊN</h2>
+                    <Button variant="outline-primary" className="mb-3 ms-4" onClick={handleShowThemMoi}>
                         <MdAddBox /> Thêm giáo viên mới
                     </Button>
+                    <Table bordered hover>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Mã</th>
+                                <th>Họ tên</th>
+                                <th>Giới tính</th>
+                                <th>Ngày sinh</th>
+                                <th>Số điện thoại</th>
+                                <th>Địa chỉ</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {teacher &&
+                                teacher.map((item, idx) => (
+                                    <tr key={idx}>
+                                        <td className="table-text-center">{idx + 1}</td>
+                                        <td>{item.MA_GV}</td>
+                                        <td>{item.HOTEN_GV}</td>
+                                        <td>{item.GIOITINH_GV === 1 ? 'Nam' : 'Nữ'}</td>
+                                        <td>{moment(item.NGAYSINH_GV).format('DD/MM/YYYY')}</td>
+                                        <td>{item.SODIENTHOAI_GV}</td>
+                                        <td>{item.TINH_THANH}</td>
+                                        <td className="table-text-center">
+                                            <strong className="infor-see" onClick={() => handleShowXemThongTin(item)}>
+                                                <FaEye />
+                                            </strong>
+                                            <strong className="infor-edit" onClick={() => handleShowSuaLai(item)}>
+                                                <FaEdit />
+                                            </strong>
+                                            <strong className="infor-remove" onClick={() => handleShowXoa(item)}>
+                                                <FaTrashAlt />
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                ))}
+                        </tbody>
+                    </Table>
                 </aside>
-                <Table bordered hover>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Mã</th>
-                            <th>Họ tên</th>
-                            <th>Giới tính</th>
-                            <th>Ngày sinh</th>
-                            <th>Số điện thoại</th>
-                            <th>Địa chỉ</th>
-                            <th>Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {teacher &&
-                            teacher.map((item, idx) => (
-                                <tr key={idx}>
-                                    <td className="table-text-center">{idx + 1}</td>
-                                    <td>{item.MA_GV}</td>
-                                    <td>{item.HOTEN_GV}</td>
-                                    <td>{item.GIOITINH_GV === 1 ? 'Nam' : 'Nữ'}</td>
-                                    <td>{item.NGAYSINH_GV}</td>
-                                    <td>{item.SODIENTHOAI_GV}</td>
-                                    <td>{item.TINH_THANH}</td>
-                                    <td className="table-text-center">
-                                        <strong className="infor-see" onClick={() => handleShowXemThongTin(item)}>
-                                            <FaEye />
-                                        </strong>
-                                        <strong className="infor-edit" onClick={() => handleShowSuaLai(item)}>
-                                            <FaEdit />
-                                        </strong>
-                                        <strong className="infor-remove" onClick={() => handleShowXoa(item)}>
-                                            <FaTrashAlt />
-                                        </strong>
-                                    </td>
-                                </tr>
-                            ))}
-                    </tbody>
-                </Table>
-            </aside>
+            </Container>
 
             <Modal show={showThemMoi} onHide={handleCloseThemMoi} animation={true} scrollable={true}>
                 <Modal.Header closeButton>
@@ -189,86 +195,160 @@ function GiaoVien() {
                 </Modal.Header>
                 <Modal.Body className="show-grid">
                     <Container>
-                        <Form>
-                            <Form.Group className="mb-3">
+                    <Form>
+                        <h3>Thông tin cơ bản</h3>
+                        <Form.Group className="mb-3">
+                            <Form.Label>
+                                <strong>Mã số</strong>
+                            </Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="MA_GV"
+                                onChange={(e) =>
+                                    setCreate({ ...create, [e.target.name]: e.target.value })
+                                }
+                                autoFocus
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>
+                                <strong>Họ và Tên</strong>
+                            </Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="HOTEN_GV"
+                                onChange={(e) =>
+                                    setCreate({ ...create, [e.target.name]: e.target.value })
+                                }
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>
+                                <strong>Ngày sinh</strong>
+                            </Form.Label>
+                            <Form.Control
+                                type="date"
+                                name="NGAYSINH_GV"
+                                onChange={(e) =>
+                                    setCreate({ ...create, [e.target.name]: e.target.value })
+                                }
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>
+                                <strong>Giới tính</strong>
+                            </Form.Label>
+                            <Form.Select
+                                name="GIOITINH_GV"
+                                onChange={(e) =>
+                                    setCreate({ ...create, [e.target.name]: e.target.value })
+                                }
+                            >
+                                <option value=" ">Chọn giới tính</option>
+                                <option value="1">Nam</option>
+                                <option value="0">Nữ</option>
+                            </Form.Select>
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>
+                                <strong>Số điện thoại</strong>
+                            </Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="SODIENTHOAI_GV"
+                                onChange={(e) =>
+                                    setCreate({ ...create, [e.target.name]: e.target.value })
+                                }
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
                                 <Form.Label>
-                                    <strong>Mã số</strong>
+                                    <strong>Email cá nhân</strong>
                                 </Form.Label>
                                 <Form.Control
                                     type="text"
-                                    name="MA_GV"
-                                    onChange={(e) => setAddTeacher({ ...addTeacher, [e.target.name]: e.target.value })}
-                                    autoFocus
+                                    name="EMAIL_GV"
+                                    onChange={(e) =>
+                                        setCreate({ ...create, [e.target.name]: e.target.value })
+                                    }
                                 />
                             </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>
+                                <strong>Địa chỉ</strong>
+                            </Form.Label>
+                            <Form.Select
+                                name="MA_TINH"
+                                onChange={(e) =>
+                                    setCreate({ ...create, [e.target.name]: e.target.value })
+                                }
+                            >
+                                <option value=" ">Chọn tỉnh thành</option>
+                                {infoProvince &&
+                                    infoProvince.map((item, idx) => (
+                                        <option key={idx} value={item.MA_TINH}>
+                                            {item.TINH_THANH}
+                                        </option>
+                                    ))}
+                            </Form.Select>
+                            <h3 className='mt-4'>Thông tin gia đình</h3>
                             <Form.Group className="mb-3">
                                 <Form.Label>
-                                    <strong>Họ và Tên</strong>
+                                    <strong>Họ tên cha</strong>
                                 </Form.Label>
                                 <Form.Control
                                     type="text"
-                                    name="HOTEN_GV"
-                                    onChange={(e) => setAddTeacher({ ...addTeacher, [e.target.name]: e.target.value })}
+                                    name="TENCHA_GV"
+                                    onChange={(e) =>
+                                        setCreate({ ...create, [e.target.name]: e.target.value })
+                                    }
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label>
-                                    <strong>Ngày sinh</strong>
-                                </Form.Label>
-                                <Form.Control
-                                    type="date"
-                                    name="NGAYSINH_GV"
-                                    onChange={(e) => setAddTeacher({ ...addTeacher, [e.target.name]: e.target.value })}
-                                />
-                            </Form.Group>
-                            <Form.Group className="mb-3">
-                                <Form.Label>
-                                    <strong>Giới tính</strong>
-                                </Form.Label>
-                                <Form.Select
-                                    name="GIOITINH_GV"
-                                    onChange={(e) => setAddTeacher({ ...addTeacher, [e.target.name]: e.target.value })}
-                                >
-                                    <option value=" ">Chọn giới tính</option>
-                                    <option value="1">Nam</option>
-                                    <option value="0">Nữ</option>
-                                </Form.Select>
-                            </Form.Group>
-                            <Form.Group className="mb-3">
-                                <Form.Label>
-                                    <strong>Số điện thoại</strong>
+                                    <strong>Tuổi cha</strong>
                                 </Form.Label>
                                 <Form.Control
                                     type="text"
-                                    name="SODIENTHOAI_GV"
-                                    onChange={(e) => setAddTeacher({ ...addTeacher, [e.target.name]: e.target.value })}
+                                    name="TUOICHA_GV"
+                                    onChange={(e) =>
+                                        setCreate({ ...create, [e.target.name]: e.target.value })
+                                    }
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label>
-                                    <strong>Địa chỉ</strong>
+                                    <strong>Họ tên mẹ</strong>
                                 </Form.Label>
-                                <Form.Select
-                                    name="MA_TINH"
-                                    onChange={(e) => setAddTeacher({ ...addTeacher, [e.target.name]: e.target.value })}
-                                >
-                                    <option value=" ">Chọn tỉnh thành</option>
-                                    {infoProvince &&
-                                        infoProvince.map((item, idx) => (
-                                            <option key={idx} value={item.MA_TINH}>
-                                                {item.TINH_THANH}
-                                            </option>
-                                        ))}
-                                </Form.Select>
+                                <Form.Control
+                                    type="text"
+                                    name="TENME_GV"
+                                    onChange={(e) =>
+                                        setCreate({ ...create, [e.target.name]: e.target.value })
+                                    }
+                                />
                             </Form.Group>
-                        </Form>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Tuổi mẹ</strong>
+                                </Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="TUOIME_GV"
+                                    onChange={(e) =>
+                                        setCreate({ ...create, [e.target.name]: e.target.value })
+                                    }
+                                />
+                            </Form.Group>
+                        </Form.Group>
+                    </Form>
                     </Container>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleCloseThemMoi}>
                         Hủy
                     </Button>
-                    <Button variant="primary" onClick={createGiaoVien}>
+                    <Button variant="primary" onClick={setGiaoVien}>
                         Tạo mới
                     </Button>
                 </Modal.Footer>
@@ -282,43 +362,46 @@ function GiaoVien() {
                 </Modal.Header>
                 <Modal.Body className="show-grid">
                     <Container>
-                        <Row>
-                            <Col xs={6} md={4}>
-                                <img
-                                    src={imageNguoiDung}
-                                    className="hinhanh_sinhvien"
-                                    alt="Hình ảnh người dùng mặc nhiên"
-                                />
-                            </Col>
-                            <Col xs={12} md={8}>
-                                <aside>
-                                    <p>
-                                        <strong>Mã: </strong> {seeTeacher.MA_GV}
-                                    </p>
-                                    <p>
-                                        <strong>Họ tên: </strong> {seeTeacher.HOTEN_GV}
-                                    </p>
-                                    <p>
-                                        <strong>Ngày sinh: </strong> {seeTeacher.NGAYSINH_GV}
-                                    </p>
-                                    <p>
-                                        <strong>Giới tính: </strong> {seeTeacher.GIOITINH_GV === 1 ? 'Nam' : 'Nữ'}
-                                    </p>
-                                    {/* <p>
-                                        <strong>Chuyên ngành: </strong> {seeTeacher.TEN_CN}
-                                    </p>
-                                    <p>
-                                        <strong>Khoa: </strong> {seeTeacher.TEN_KHOA}
-                                    </p> */}
-                                    <p>
-                                        <strong>Điện thoại liên lạc: </strong> {seeTeacher.SODIENTHOAI_GV}
-                                    </p>
-                                    <p>
-                                        <strong>Địa chỉ liên lạc: </strong> {seeTeacher.TINH_THANH}
-                                    </p>
-                                </aside>
-                            </Col>
-                        </Row>
+                        <aside className="border rounded border-secondary mb-2">
+                            <h5 className="text-center my-2">Thông tin cơ bản</h5>
+                            <aside className="ms-2">
+                                <p>
+                                    <strong>Mã số: </strong> {seeTeacher.MA_GV}
+                                </p>
+                                <p>
+                                    <strong>Họ tên: </strong> {seeTeacher.HOTEN_GV}
+                                </p>
+                                <p>
+                                    <strong>Ngày sinh: </strong> {moment(seeTeacher.NGAYSINH_GV).format('DD/MM/YYYY')}
+                                </p>
+                                <p>
+                                    <strong>Điện thoại liên lạc: </strong> {seeTeacher.SODIENTHOAI_GV}
+                                </p>
+                                <p>
+                                    <strong>Email: </strong> {seeTeacher.EMAIL_GV}
+                                </p>
+                                <p>
+                                    <strong>Địa chỉ liên lạc: </strong> {seeTeacher.TINH_THANH}
+                                </p>
+                            </aside>
+                        </aside>
+                        <aside className="border rounded border-secondary">
+                            <h5 className="text-center my-2">Thông tin gia đình</h5>
+                            <aside className="ms-2">
+                                <p>
+                                    <strong>Cha của giáo viên: </strong> {seeTeacher.TENCHA_GV}
+                                </p>
+                                <p>
+                                    <strong>Tuổi của cha giáo viên: </strong> {seeTeacher.TUOICHA_GV}
+                                </p>
+                                <p>
+                                    <strong>Mẹ của giáo viên: </strong> {seeTeacher.TENME_GV}
+                                </p>
+                                <p>
+                                    <strong>Tuổi của mẹ giáo viên: </strong> {seeTeacher.TUOIME_GV}
+                                </p>
+                            </aside>
+                        </aside>
                     </Container>
                 </Modal.Body>
                 <Modal.Footer>
@@ -336,12 +419,17 @@ function GiaoVien() {
                 </Modal.Header>
                 <Modal.Body className="show-grid">
                     <Container>
-                        <Form>
+                    <Form>
+                            <h3>Thông tin cơ bản</h3>
                             <Form.Group className="mb-3">
                                 <Form.Label>
-                                    <strong>Mã giáo viên</strong>
+                                    <strong>Mã số</strong>
                                 </Form.Label>
-                                <Form.Control type="text" name="MA_GV" value={editTeacher.MA_GV} disabled />
+                                <Form.Control
+                                    type="text"
+                                    value={edit.MA_GV}
+                                    disabled
+                                />
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label>
@@ -350,9 +438,12 @@ function GiaoVien() {
                                 <Form.Control
                                     type="text"
                                     name="HOTEN_GV"
-                                    value={editTeacher.HOTEN_GV}
+                                    value={edit.HOTEN_GV}
                                     onChange={(e) =>
-                                        setEditTeacher({ ...editTeacher, [e.target.name]: e.target.value })
+                                        setEdit({
+                                            ...edit,
+                                            [e.target.name]: e.target.value,
+                                        })
                                     }
                                     autoFocus
                                 />
@@ -364,9 +455,12 @@ function GiaoVien() {
                                 <Form.Control
                                     type="date"
                                     name="NGAYSINH_GV"
-                                    value={editTeacher.NGAYSINH_GV}
+                                    value={edit.NGAYSINH_GV}
                                     onChange={(e) =>
-                                        setEditTeacher({ ...editTeacher, [e.target.name]: e.target.value })
+                                        setEdit({
+                                            ...edit,
+                                            [e.target.name]: e.target.value,
+                                        })
                                     }
                                 />
                             </Form.Group>
@@ -375,10 +469,13 @@ function GiaoVien() {
                                     <strong>Giới tính</strong>
                                 </Form.Label>
                                 <Form.Select
-                                    value={editTeacher.GIOITINH_GV}
                                     name="GIOITINH_GV"
+                                    value={edit.GIOITINH_GV}
                                     onChange={(e) =>
-                                        setEditTeacher({ ...editTeacher, [e.target.name]: e.target.value })
+                                        setEdit({
+                                            ...edit,
+                                            [e.target.name]: e.target.value,
+                                        })
                                     }
                                 >
                                     <option value="1">Nam</option>
@@ -387,27 +484,122 @@ function GiaoVien() {
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label>
-                                    <strong>Số điện thoại liên lạc</strong>
+                                    <strong>Số điện thoại</strong>
                                 </Form.Label>
                                 <Form.Control
                                     type="text"
                                     name="SODIENTHOAI_GV"
-                                    value={editTeacher.SODIENTHOAI_GV}
+                                    value={edit.SODIENTHOAI_GV}
                                     onChange={(e) =>
-                                        setEditTeacher({ ...editTeacher, [e.target.name]: e.target.value })
+                                        setEdit({
+                                            ...edit,
+                                            [e.target.name]: e.target.value,
+                                        })
                                     }
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Email</strong>
+                                </Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="EMAIL_GV"
+                                    value={edit.EMAIL_GV}
+                                    onChange={(e) =>
+                                        setEdit({
+                                            ...edit,
+                                            [e.target.name]: e.target.value,
+                                        })
+                                    }
+                                    autoFocus
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label>
                                     <strong>Địa chỉ liên lạc</strong>
                                 </Form.Label>
+                                <Form.Select
+                                    name="MA_TINH"
+                                    value={edit.MA_TINH}
+                                    onChange={(e) =>
+                                        setEdit({
+                                            ...edit,
+                                            [e.target.name]: e.target.value,
+                                        })
+                                    }
+                                >
+                                    {infoProvince &&
+                                        infoProvince.map((item, idx) => (
+                                            <option key={idx} value={item.MA_TINH}>
+                                                {item.TINH_THANH}
+                                            </option>
+                                        ))}
+                                </Form.Select>
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Họ tên cha</strong>
+                                </Form.Label>
                                 <Form.Control
                                     type="text"
-                                    name="TINH_THANH"
-                                    value={editTeacher.TINH_THANH}
+                                    name="TENCHA_GV"
+                                    value={edit.TENCHA_GV}
                                     onChange={(e) =>
-                                        setEditTeacher({ ...editTeacher, [e.target.name]: e.target.value })
+                                        setEdit({
+                                            ...edit,
+                                            [e.target.name]: e.target.value,
+                                        })
+                                    }
+                                />
+                            </Form.Group>
+
+                            <h3 className='mt-3'>Thông tin gia đình</h3>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Tuổi của cha</strong>
+                                </Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="TUOICHA_GV"
+                                    value={edit.TUOICHA_GV}
+                                    onChange={(e) =>
+                                        setEdit({
+                                            ...edit,
+                                            [e.target.name]: e.target.value,
+                                        })
+                                    }
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Họ tên mẹ</strong>
+                                </Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="TENME_GV"
+                                    value={edit.TENME_GV}
+                                    onChange={(e) =>
+                                        setEdit({
+                                            ...edit,
+                                            [e.target.name]: e.target.value,
+                                        })
+                                    }
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Tuổi của mẹ</strong>
+                                </Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="TUOIME_GV"
+                                    value={edit.TUOIME_GV}
+                                    onChange={(e) =>
+                                        setEdit({
+                                            ...edit,
+                                            [e.target.name]: e.target.value,
+                                        })
                                     }
                                 />
                             </Form.Group>
@@ -418,7 +610,7 @@ function GiaoVien() {
                     <Button variant="secondary" onClick={handleCloseSuaLai}>
                         Hủy
                     </Button>
-                    <Button variant="primary" onClick={() => updateGiaoVien(editTeacher.MA_GV)}>
+                    <Button variant="primary" onClick={()=>editGiaoVien(edit.MA_GV)}>
                         Lưu lại
                     </Button>
                 </Modal.Footer>

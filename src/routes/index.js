@@ -9,6 +9,8 @@ import {
     PhongDaoTao,
     TaiKhoan,
     ThongTinSinhVien,
+    LyDo,
+    HocPhan,
 } from '~/pages/admin'
 
 import { 
@@ -31,7 +33,9 @@ import QuanLyNamHocPDT from '~/pages/trainer/QuanLyNamHoc'
 import QuanLyDiemPDT from '~/pages/trainer/QuanLyDiem'
 import QuanLyLyDoPDT from '~/pages/trainer/QuanLyLyDo'
 import QuanLyKhoaPDT from '~/pages/trainer/QuanLyKhoa'
-
+import QuanLyChuyenNganhPDT from '~/pages/trainer/QuanLyChuyenNganh'
+import QuanLyLopHocPDT from '~/pages/trainer/QuanLyLopHoc'
+import QuanLyMonHocPDT from '~/pages/trainer/QuanLyMonHoc'
 
 import DangNhap from '~/pages/DangNhap'
 
@@ -45,6 +49,8 @@ const privateRoutes = [
     { path: '/Admin/LopHoc', component: LopHoc },
     { path: '/Admin/ChuyenNganh', component: ChuyenNganh },
     { path: '/Admin/Khoa', component: Khoa },
+    { path: '/Admin/LyDo', component: LyDo },
+    { path: '/Admin/HocPhan', component: HocPhan },
     { path: '/Admin/TaiKhoan', component: TaiKhoan },
     { path: '/DangNhap', component: DangNhap, layout: LoginLayout },
 ]
@@ -66,6 +72,9 @@ const trainerRoutes = [
     { path: '/Trainer/NamHoc', component: QuanLyNamHocPDT},
     { path: '/Trainer/LyDo', component: QuanLyLyDoPDT},
     { path: '/Trainer/Khoa', component: QuanLyKhoaPDT},
+    { path: '/Trainer/ChuyenNganh', component: QuanLyChuyenNganhPDT},
+    { path: '/Trainer/LopHoc', component: QuanLyLopHocPDT},
+    { path: '/Trainer/MonHoc', component: QuanLyMonHocPDT},
     { path: '/DangNhap', component: DangNhap, layout: LoginLayout },
 ]
 

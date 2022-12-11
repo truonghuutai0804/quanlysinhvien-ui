@@ -129,7 +129,7 @@ const QuanLyLyDo = () => {
                         </Link>
                     </aside>
                     <h2 className="my-5 text-center">QUẢN LÝ LÝ DO</h2>
-                    <Button onClick={handleShowThemMoi}>Thêm lý do mới</Button>
+                    <Button onClick={handleShowThemMoi} className='mb-3 ms-4'>Thêm lý do mới</Button>
                     <Table bordered hover>
                         <thead>
                             <tr>

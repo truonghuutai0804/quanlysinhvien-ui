@@ -38,6 +38,7 @@ function ThongTinCaNhan() {
                 <h2>THÔNG TIN SINH VIÊN</h2>
                 <Table hover>
                     <tbody>
+                        <h3 className='m-3'>Thông tin cơ bản</h3>
                         <tr>
                             <th>Mã SV:</th>
                             <td>{student.MA_SV}</td>
@@ -61,6 +62,23 @@ function ThongTinCaNhan() {
                         <tr>
                             <th>Địa chỉ:</th>
                             <td>{student.TINH_THANH}</td>
+                        </tr>
+                        <h3 className='m-3'>Thông tin gia đình</h3>
+                        <tr>
+                            <th>Họ tên cha:</th>
+                            <td>{student.TENCHA_SV}</td>
+                        </tr>
+                        <tr>
+                            <th>Tuổi của cha:</th>
+                            <td>{student.TUOICHA_SV}</td>
+                        </tr>
+                        <tr>
+                            <th>Họ tên mẹ:</th>
+                            <td>{student.TENME_SV}</td>
+                        </tr>
+                        <tr>
+                            <th>Tuổi của mẹ:</th>
+                            <td>{student.TUOIME_SV}</td>
                         </tr>
                     </tbody>
                 </Table>

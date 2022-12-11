@@ -119,7 +119,7 @@ const BangDieuKhien = () => {
                         <Row>
                             <Col>
                                 <Card className="items-bangdieukhien">
-                                    <Card.Link as={Link} to="/Trainer/HocPhan">
+                                    <Card.Link as={Link} to="/Trainer/MonHoc">
                                         <Card.Img variant="top" src={imageQuanLyMonHoc} />
                                         <Card.Title className="mt-3">
                                             <strong>MÔN HỌC</strong>
@@ -139,7 +139,7 @@ const BangDieuKhien = () => {
                             </Col>
                             <Col>
                                 <Card className="items-bangdieukhien">
-                                    <Card.Link as={Link} to="/Trainer/HocPhan">
+                                    <Card.Link as={Link} to="/Trainer/ChuyenNganh">
                                         <Card.Img variant="top" src={imageQuanLyChuyenNganh} />
                                         <Card.Title className="mt-3">
                                             <strong>CHUYÊN NGÀNH</strong>
@@ -149,7 +149,7 @@ const BangDieuKhien = () => {
                             </Col>
                             <Col>
                                 <Card className="items-bangdieukhien">
-                                    <Card.Link as={Link} to="/Trainer/HocPhan">
+                                    <Card.Link as={Link} to="/Trainer/LopHoc">
                                         <Card.Img variant="top" src={imageQuanLyLopHoc} />
                                         <Card.Title className="mt-3">
                                             <strong>LỚP HỌC</strong>

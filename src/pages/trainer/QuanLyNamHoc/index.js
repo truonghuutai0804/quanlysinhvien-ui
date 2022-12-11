@@ -129,7 +129,7 @@ const QuanLyNamHoc = () => {
                         </Link>
                     </aside>
                     <h2 className="my-5 text-center">QUẢN LÝ NĂM HỌC</h2>
-                    <Button onClick={handleShowThemMoi}>Thêm năm học mới</Button>
+                    <Button onClick={handleShowThemMoi} className='mb-3 ms-4'>Thêm năm học mới</Button>
                     <Table bordered hover>
                         <thead>
                             <tr>

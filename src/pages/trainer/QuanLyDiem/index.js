@@ -49,10 +49,12 @@ const QuanLyDiem = () => {
     }
 
     const handleShowBlockchainSV = () => {
+        getLyDo()
         setShowBlockchainSV(true)
     }
 
     const handleShowBlockchainHP = () => {
+        getLyDo()
         setShowBlockchainHP(true)
     }
 
@@ -244,6 +246,14 @@ const QuanLyDiem = () => {
             }
         }
         return arrDiem
+    }
+
+    const reasons = (info) =>{
+        for(var i = 0; i < reason.length; i++){
+            if(info === reason[i].MA_LD){
+                return reason[i].LY_DO
+            }
+        }
     }
 
     return (
@@ -475,7 +485,7 @@ const QuanLyDiem = () => {
                                                 <td className="table-text-center">{item.TIN_CHI}</td>
                                                 <td className="table-text-center">{item.DIEM_SO}</td>
                                                 <td className="table-text-center">{item.DIEM_CHU}</td>
-                                                <td className="table-text-center">{item.LY_DO}</td>
+                                                <td className="table-text-center">{reasons(item.LY_DO)}</td>
                                             </tr>
                                         ))}
                                 </tbody>
@@ -486,7 +496,6 @@ const QuanLyDiem = () => {
                                 <p style={{ marginRight: '90px' }}>
                                     <b>Xác nhận</b>
                                 </p>
-                                <p style={{ marginRight: '100px' }}>Ký tên</p>
                             </span>
                             <br />
                             <br />
@@ -556,6 +565,7 @@ const QuanLyDiem = () => {
                                                 <td>{item.HOTEN_SV}</td>
                                                 <td className="table-text-center">{item.DIEM_SO}</td>
                                                 <td className="table-text-center">{item.DIEM_CHU}</td>
+                                                <td className="table-text-center">{reasons(item.LY_DO)}</td>
                                                 <td></td>
                                             </tr>
                                         ))}
@@ -567,7 +577,6 @@ const QuanLyDiem = () => {
                                 <p style={{ marginRight: '90px' }}>
                                     <b>Xác nhận</b>
                                 </p>
-                                <p style={{ marginRight: '100px' }}>Ký tên</p>
                             </span>
                             <br />
                             <br />

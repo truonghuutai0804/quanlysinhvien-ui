@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Button, Col, Container, Form, Modal, Row, Table } from 'react-bootstrap'
+import { Button, Container, Form, Modal, Table } from 'react-bootstrap'
 import { MdAddBox } from 'react-icons/md'
 import { FaTrashAlt, FaEdit, FaEye } from 'react-icons/fa'
-import imageNguoiDung from '~/asset/images/icon_user.png'
 import axios from 'axios'
 import { GiReturnArrow } from 'react-icons/gi'
 import { Link } from 'react-router-dom'
+import moment from 'moment'
+import Swal from 'sweetalert2'
+
 
 function DanhSachSinhVien() {
     const [student, setStudent] = useState([])
@@ -101,7 +103,10 @@ function DanhSachSinhVien() {
             const response = await axios(options)
             if (response.data.message === 'SUCCESS') {
                 handleCloseThemMoi()
+                Swal.fire('Thành công', 'Bạn đã thêm mới thành công ', 'success')
                 getSinhVien()
+            }else{
+                Swal.fire('Thất bại', 'Bạn đã thêm mới thất bại ', 'error')
             }
         } catch (error) {
             console.log(error)
@@ -118,7 +123,10 @@ function DanhSachSinhVien() {
             const response = await axios(options)
             if (response.data.message === 'SUCCESS') {
                 handleCloseSuaLai()
+                Swal.fire('Thành công', 'Bạn đã sửa thành công ', 'success')
                 getSinhVien()
+            }else{
+                Swal.fire('Thất bại', 'Bạn đã sửa thất bại ', 'error')
             }
         } catch (error) {
             console.log(error)
@@ -134,7 +142,11 @@ function DanhSachSinhVien() {
             const response = await axios(options)
             if (response.data.message === 'SUCCESS') {
                 handleCloseXoa()
+                Swal.fire('Thành công', 'Bạn đã xóa thành công ', 'success')
                 getSinhVien()
+            }
+            else{
+                Swal.fire('Thất bại', 'Bạn đã xóa thất bại ', 'error')
             }
         } catch (error) {
             console.log(error)
@@ -151,15 +163,13 @@ function DanhSachSinhVien() {
         <>
             <Container>
                 <aside className="ms-4">
-                    <h2 className="my-5 text-center">DANH SÁCH SINH VIÊN</h2>
-                    <aside className="d-flex justify-content-between m-3">
-                        <Link className="btn btn-outline-secondary" to="/Trainer">
-                            <GiReturnArrow /> Quay Lại
-                        </Link>
-                        <Button variant="outline-primary" onClick={handleShowThemMoi}>
-                            <MdAddBox /> Thêm sinh viên mới
-                        </Button>
-                    </aside>
+                    <Link className="btn btn-outline-secondary mt-3" to="/Trainer">
+                        <GiReturnArrow /> Quay Lại
+                    </Link>
+                    <h2 className="my-3 text-center">DANH SÁCH SINH VIÊN</h2>
+                    <Button variant="outline-primary" className="mb-3 ms-4" onClick={handleShowThemMoi}>
+                        <MdAddBox /> Thêm sinh viên mới
+                    </Button>
                     <Table bordered hover>
                         <thead>
                             <tr>
@@ -182,7 +192,7 @@ function DanhSachSinhVien() {
                                         <td>{item.MA_SV}</td>
                                         <td>{item.HOTEN_SV}</td>
                                         <td>{item.GIOITINH_SV === 1 ? 'Nam' : 'Nữ'}</td>
-                                        <td>{item.NGAYSINH_SV}</td>
+                                        <td>{moment(item.NGAYSINH_SV).format("DD/MM/YYYY")}</td>
                                         <td>{item.TEN_LOP}</td>
                                         <td>{item.TEN_CN}</td>
                                         <td>{item.TEN_KHOA}</td>
@@ -230,6 +240,7 @@ function DanhSachSinhVien() {
                 </Modal.Header>
                 <Modal.Body className="show-grid">
                     <Form>
+                        <h3>Thông tin cơ bản</h3>
                         <Form.Group className="mb-3">
                             <Form.Label>
                                 <strong>Mã số</strong>
@@ -314,6 +325,18 @@ function DanhSachSinhVien() {
                             />
                         </Form.Group>
                         <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Email cá nhân</strong>
+                                </Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="EMAIL_SV"
+                                    onChange={(e) =>
+                                        setCreateInfoStudent({ ...createInfoStudent, [e.target.name]: e.target.value })
+                                    }
+                                />
+                            </Form.Group>
+                        <Form.Group className="mb-3">
                             <Form.Label>
                                 <strong>Địa chỉ</strong>
                             </Form.Label>
@@ -331,6 +354,55 @@ function DanhSachSinhVien() {
                                         </option>
                                     ))}
                             </Form.Select>
+                            <h3 className='mt-4'>Thông tin gia đình</h3>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Họ tên cha</strong>
+                                </Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="TENCHA_SV"
+                                    onChange={(e) =>
+                                        setCreateInfoStudent({ ...createInfoStudent, [e.target.name]: e.target.value })
+                                    }
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Tuổi cha</strong>
+                                </Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="TUOICHA_SV"
+                                    onChange={(e) =>
+                                        setCreateInfoStudent({ ...createInfoStudent, [e.target.name]: e.target.value })
+                                    }
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Họ tên mẹ</strong>
+                                </Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="TENME_SV"
+                                    onChange={(e) =>
+                                        setCreateInfoStudent({ ...createInfoStudent, [e.target.name]: e.target.value })
+                                    }
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Tuổi mẹ</strong>
+                                </Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="TUOIME_SV"
+                                    onChange={(e) =>
+                                        setCreateInfoStudent({ ...createInfoStudent, [e.target.name]: e.target.value })
+                                    }
+                                />
+                            </Form.Group>
                         </Form.Group>
                     </Form>
                 </Modal.Body>
@@ -347,71 +419,60 @@ function DanhSachSinhVien() {
             <Modal show={showXemThongTin} onHide={handleCloseXemThongTin} animation={true} scrollable={true}>
                 <Modal.Header closeButton>
                     <Modal.Title className="infor-see">
-                        <FaEye size={50} /> THÔNG TIN SINH VIÊN
+                        <FaEye size={50} /> THÔNG TIN SINH VIÊN: {infoSV.HOTEN_SV}
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="show-grid">
                     <Container>
-                        <Row>
-                            <Col xs={6} md={4}>
-                                <img
-                                    src={imageNguoiDung}
-                                    className="hinhanh_sinhvien"
-                                    alt="Hình ảnh người dùng mặc nhiên"
-                                />
-                            </Col>
-                            <Col xs={12} md={8}>
-                                <aside className="border rounded border-secondary mb-2">
-                                    <h5 className="text-center my-2">Thông tin cơ bản</h5>
-                                    <aside className="ms-2">
-                                        <p>
-                                            <strong>MSSV: </strong> {infoSV.MA_SV}
-                                        </p>
-                                        <p>
-                                            <strong>Họ tên: </strong> {infoSV.HOTEN_SV}
-                                        </p>
-                                        <p>
-                                            <strong>Ngày sinh: </strong> {infoSV.NGAYSINH_SV}
-                                        </p>
-                                        <p>
-                                            <strong>Email: </strong> {infoSV.EMAIL_SV}
-                                        </p>
-                                        <p>
-                                            <strong>Lớp: </strong> {infoSV.TEN_LOP}
-                                        </p>
-                                        <p>
-                                            <strong>Chuyên ngành: </strong> {infoSV.TEN_CN}
-                                        </p>
-                                        <p>
-                                            <strong>Khoa: </strong> {infoSV.TEN_KHOA}
-                                        </p>
-                                        <p>
-                                            <strong>Điện thoại liên lạc: </strong> {infoSV.SODIENTHOAI_SV}
-                                        </p>
-                                        <p>
-                                            <strong>Địa chỉ liên lạc: </strong> {infoSV.TINH_THANH}
-                                        </p>
-                                    </aside>
-                                </aside>
-                                <aside className="border rounded border-secondary">
-                                    <h5 className="text-center my-2">Thông tin gia đình</h5>
-                                    <aside className="ms-2">
-                                        <p>
-                                            <strong>Cha của sinh viên: </strong> {infoSV.TENCHA_SV}
-                                        </p>
-                                        <p>
-                                            <strong>Tuổi của cha sinh viên: </strong> {infoSV.TUOICHA_SV}
-                                        </p>
-                                        <p>
-                                            <strong>Mẹ của sinh viên: </strong> {infoSV.TENME_SV}
-                                        </p>
-                                        <p>
-                                            <strong>Tuổi của mẹ sinh viên: </strong> {infoSV.TUOIME_SV}
-                                        </p>
-                                    </aside>
-                                </aside>
-                            </Col>
-                        </Row>
+                        <aside className="border rounded border-secondary mb-2 ">
+                            <h5 className="text-center my-2">Thông tin cơ bản</h5>
+                            <aside className="ms-4">
+                                <p>
+                                    <strong>MSSV: </strong> {infoSV.MA_SV}
+                                </p>
+                                <p>
+                                    <strong>Họ tên: </strong> {infoSV.HOTEN_SV}
+                                </p>
+                                <p>
+                                    <strong>Ngày sinh: </strong> {moment(infoSV.NGAYSINH_SV).format("DD/MM/YYYY")}
+                                </p>
+                                <p>
+                                    <strong>Email: </strong> {infoSV.EMAIL_SV}
+                                </p>
+                                <p>
+                                    <strong>Lớp: </strong> {infoSV.TEN_LOP}
+                                </p>
+                                <p>
+                                    <strong>Chuyên ngành: </strong> {infoSV.TEN_CN}
+                                </p>
+                                <p>
+                                    <strong>Khoa: </strong> {infoSV.TEN_KHOA}
+                                </p>
+                                <p>
+                                    <strong>Điện thoại liên lạc: </strong> {infoSV.SODIENTHOAI_SV}
+                                </p>
+                                <p>
+                                    <strong>Địa chỉ liên lạc: </strong> {infoSV.TINH_THANH}
+                                </p>
+                            </aside>
+                        </aside>
+                        <aside className="border rounded border-secondary">
+                            <h5 className="text-center my-2">Thông tin gia đình</h5>
+                            <aside className="ms-4">
+                                <p>
+                                    <strong>Cha của sinh viên: </strong> {infoSV.TENCHA_SV}
+                                </p>
+                                <p>
+                                    <strong>Tuổi của cha sinh viên: </strong> {infoSV.TUOICHA_SV}
+                                </p>
+                                <p>
+                                    <strong>Mẹ của sinh viên: </strong> {infoSV.TENME_SV}
+                                </p>
+                                <p>
+                                    <strong>Tuổi của mẹ sinh viên: </strong> {infoSV.TUOIME_SV}
+                                </p>
+                            </aside>
+                        </aside>
                     </Container>
                 </Modal.Body>
                 <Modal.Footer>
@@ -424,12 +485,13 @@ function DanhSachSinhVien() {
             <Modal show={showSuaLai} onHide={handleCloseSuaLai} animation={true} scrollable={true}>
                 <Modal.Header closeButton>
                     <Modal.Title className="infor-edit">
-                        <FaEdit size={50} /> SỬA LẠI THÔNG TIN SINH VIÊN
+                        <FaEdit size={50} /> SỬA LẠI THÔNG TIN: {editInfoSV.HOTEN_SV}
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="show-grid">
                     <Container>
                         <Form>
+                            <h3>Thông tin cơ bản</h3>
                             <Form.Group className="mb-3">
                                 <Form.Label>
                                     <strong>Mã số</strong>
@@ -538,11 +600,28 @@ function DanhSachSinhVien() {
                             </Form.Group>
                             <Form.Group className="mb-3">
                                 <Form.Label>
+                                    <strong>Email</strong>
+                                </Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="EMAIL_SV"
+                                    value={editInfoSV.EMAIL_SV}
+                                    onChange={(e) =>
+                                        setEditInfoSV({
+                                            ...editInfoSV,
+                                            [e.target.name]: e.target.value,
+                                        })
+                                    }
+                                    autoFocus
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
                                     <strong>Địa chỉ liên lạc</strong>
                                 </Form.Label>
                                 <Form.Select
                                     name="MA_TINH"
-                                    value={editInfoSV.TINH_THANH}
+                                    value={editInfoSV.MA_TINH}
                                     onChange={(e) =>
                                         setEditInfoSV({
                                             ...editInfoSV,
@@ -552,11 +631,77 @@ function DanhSachSinhVien() {
                                 >
                                     {infoProvince &&
                                         infoProvince.map((item, idx) => (
-                                            <option key={idx} value={item.MA_TNH}>
+                                            <option key={idx} value={item.MA_TINH}>
                                                 {item.TINH_THANH}
                                             </option>
                                         ))}
                                 </Form.Select>
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Họ tên cha</strong>
+                                </Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="TENCHA_SV"
+                                    value={editInfoSV.TENCHA_SV}
+                                    onChange={(e) =>
+                                        setEditInfoSV({
+                                            ...editInfoSV,
+                                            [e.target.name]: e.target.value,
+                                        })
+                                    }
+                                />
+                            </Form.Group>
+
+                            <h3 className='mt-3'>Thông tin gia đình</h3>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Tuổi của cha</strong>
+                                </Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="TUOICHA_SV"
+                                    value={editInfoSV.TUOICHA_SV}
+                                    onChange={(e) =>
+                                        setEditInfoSV({
+                                            ...editInfoSV,
+                                            [e.target.name]: e.target.value,
+                                        })
+                                    }
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Họ tên mẹ</strong>
+                                </Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="TENME_SV"
+                                    value={editInfoSV.TENME_SV}
+                                    onChange={(e) =>
+                                        setEditInfoSV({
+                                            ...editInfoSV,
+                                            [e.target.name]: e.target.value,
+                                        })
+                                    }
+                                />
+                            </Form.Group>
+                            <Form.Group className="mb-3">
+                                <Form.Label>
+                                    <strong>Tuổi của mẹ</strong>
+                                </Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="TUOIME_SV"
+                                    value={editInfoSV.TUOIME_SV}
+                                    onChange={(e) =>
+                                        setEditInfoSV({
+                                            ...editInfoSV,
+                                            [e.target.name]: e.target.value,
+                                        })
+                                    }
+                                />
                             </Form.Group>
                         </Form>
                     </Container>

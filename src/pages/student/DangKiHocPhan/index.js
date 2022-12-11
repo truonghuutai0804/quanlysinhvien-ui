@@ -167,7 +167,7 @@ function KetQuaHocTap() {
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Modal heading</Modal.Title>
+                    <Modal.Title>Đăng kí học phần {createScore.TEN_MH}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>

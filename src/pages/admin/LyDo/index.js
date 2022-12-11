@@ -2,12 +2,10 @@ import axios from 'axios'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Container, Form, Modal, Table } from 'react-bootstrap'
 import { FaEdit, FaTrashAlt } from 'react-icons/fa'
-import { GiReturnArrow } from 'react-icons/gi'
 import { MdAddBox } from 'react-icons/md'
-import { Link } from 'react-router-dom'
 import Swal from 'sweetalert2'
 
-const QuanLyKhoa = () => {
+const LyDo = () => {
     const [data, setData] = useState([])
     const [createInput, setCreateInput] = useState([])
     const [editData, setEditData] = useState([])
@@ -38,11 +36,11 @@ const QuanLyKhoa = () => {
         try {
             const options = {
                 method: 'get',
-                url: 'http://localhost:8080/api/faculty',
+                url: 'http://localhost:8080/api/reason',
             }
             const response = await axios(options)
             const datas = response.data.data
-            if (response.data.status === 400) {
+            if (response.data.message === 'SUCCESS') {
                 setData(datas)
             }
         } catch (error) {
@@ -54,7 +52,7 @@ const QuanLyKhoa = () => {
         try {
             const options = {
                 method: 'post',
-                url: 'http://localhost:8080/api/faculty',
+                url: 'http://localhost:8080/api/reason',
                 data: createInput,
             }
             const response = await axios(options)
@@ -76,7 +74,7 @@ const QuanLyKhoa = () => {
       try {
           const options = {
               method: 'put',
-              url: `http://localhost:8080/api/faculty/${id}`,
+              url: `http://localhost:8080/api/reason/${id}`,
               data: editData,
           }
           const response = await axios(options)
@@ -98,7 +96,7 @@ const QuanLyKhoa = () => {
     try {
         const options = {
             method: 'delete',
-            url: `http://localhost:8080/api/faculty/${id}`,
+            url: `http://localhost:8080/api/reason/${id}`,
         }
         const response = await axios(options)
         if (response.data.message === 'SUCCESS') {
@@ -123,19 +121,14 @@ const QuanLyKhoa = () => {
         <>
             <Container>
                 <aside className="ms-4">
-                    <aside className="d-flex m-3">
-                        <Link className="btn btn-outline-secondary" to="/Trainer">
-                            <GiReturnArrow /> Quay Lại
-                        </Link>
-                    </aside>
-                    <h2 className="my-5 text-center">QUẢN LÝ KHOA</h2>
-                    <Button onClick={handleShowThemMoi} className='mb-3 ms-4'>Thêm khoa mới</Button>
+                    <h2 className="my-5 text-center">QUẢN LÝ LÝ DO</h2>
+                    <Button onClick={handleShowThemMoi} className='mb-3 ms-4'>Thêm lý do mới</Button>
                     <Table bordered hover>
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Mã khoa</th>
-                                <th>Tên khoa</th>
+                                <th>Mã lý do</th>
+                                <th>Lý do</th>
                                 <th>Hành động</th>
                             </tr>
                         </thead>
@@ -144,8 +137,8 @@ const QuanLyKhoa = () => {
                                 data.map((item, idx) => (
                                     <tr key={idx}>
                                         <td className="table-text-center">{idx + 1}</td>
-                                        <td className="table-text-center">{item.MA_KHOA}</td>
-                                        <td >{item.TEN_KHOA}</td>
+                                        <td className="table-text-center">{item.MA_LD}</td>
+                                        <td >{item.LY_DO}</td>
                                         <td className="table-text-center">
                                             <strong
                                                 className="infor-edit"
@@ -175,29 +168,29 @@ const QuanLyKhoa = () => {
                 <Modal.Header closeButton>
                     <Modal.Title className="infor-new">
                         <MdAddBox size={50} />
-                        THÊM KHOA MỚI
+                        THÊM LÝ DO MỚI
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="show-grid">
                     <Form>
                         <Form.Group className="mb-3">
                             <Form.Label>
-                                <strong>Mã khoa</strong>
+                                <strong>Mã lý do</strong>
                             </Form.Label>
                             <Form.Control
                                 type="text"
-                                name="MA_KHOA"
+                                name="MA_LD"
                                 onChange={(e) => setCreateInput({ ...createInput, [e.target.name]: e.target.value })}
                                 autoFocus
                             />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>
-                                <strong>Tên khoa</strong>
+                                <strong>Lý do</strong>
                             </Form.Label>
                             <Form.Control
                                 type="text"
-                                name="TEN_KHOA"
+                                name="LY_DO"
                                 onChange={(e) => setCreateInput({ ...createInput, [e.target.name]: e.target.value })}
                             />
                         </Form.Group>
@@ -216,25 +209,25 @@ const QuanLyKhoa = () => {
             <Modal show={showSuaLai} onHide={handleCloseSuaLai} animation={true} scrollable={true}>
                 <Modal.Header closeButton>
                     <Modal.Title className="infor-edit">
-                        <FaEdit size={50} /> SỬA LẠI THÔNG TIN KHOA
+                        <FaEdit size={50} /> SỬA LẠI THÔNG TIN LÝ DO
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="show-grid">
                     <Form>
                         <Form.Group className="mb-3">
                             <Form.Label>
-                                <strong>Mã khoa</strong>
+                                <strong>Mã lý do</strong>
                             </Form.Label>
-                            <Form.Control type="text" value={editData.MA_KHOA} disabled />
+                            <Form.Control type="text" value={editData.MA_LD} disabled />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>
-                                <strong>Tên khoa</strong>
+                                <strong>Lý do</strong>
                             </Form.Label>
                             <Form.Control
                                 type="text"
-                                name="TEN_KHOA"
-                                value={editData.TEN_KHOA}
+                                name="LY_DO"
+                                value={editData.LY_DO}
                                 onChange={(e) => setEditData({ ...editData, [e.target.name]: e.target.value })}
                                 autoFocus
                             />
@@ -245,7 +238,7 @@ const QuanLyKhoa = () => {
                     <Button variant="secondary" onClick={handleCloseSuaLai}>
                         Hủy
                     </Button>
-                    <Button variant="primary" onClick={() => update(editData.MA_KHOA)}>
+                    <Button variant="primary" onClick={() => update(editData.MA_LD)}>
                         Lưu lại
                     </Button>
                 </Modal.Footer>
@@ -254,17 +247,17 @@ const QuanLyKhoa = () => {
             <Modal show={showXoa} onHide={handleCloseXoa} animation={true} scrollable={true}>
                 <Modal.Header closeButton>
                     <Modal.Title className="infor-remove">
-                        <FaTrashAlt size={50} /> XÓA THÔNG TIN KHOA
+                        <FaTrashAlt size={50} /> XÓA THÔNG TIN LÝ DO
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <p>
-                        Bạn có chắc chắn xóa thông tin của khoa <strong>{deleteData.TEN_KHOA}</strong> này ?
+                        Bạn có chắc chắn xóa thông tin của lý do <strong>{deleteData.LY_DO}</strong> này ?
                     </p>
                     <strong>Lưu ý:</strong> Nếu xóa thông tin sẽ mất vĩnh viễn
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="danger" onClick={() => Delete(deleteData.MA_KHOA)}>
+                    <Button variant="danger" onClick={() => Delete(deleteData.MA_LD)}>
                         Chắc chắn
                     </Button>
                     <Button variant="secondary" onClick={handleCloseXoa}>
@@ -276,4 +269,4 @@ const QuanLyKhoa = () => {
     )
 }
 
-export default QuanLyKhoa
+export default LyDo
